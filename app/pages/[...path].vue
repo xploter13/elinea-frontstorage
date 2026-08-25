@@ -2,6 +2,7 @@
 import type { Component } from 'vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
 import TemplateFallback from '~/components/templates/TemplateFallback.vue'
+import { pageTitle, resolveStorefrontPage } from '~/utils/storefront-page'
 
 const requestHeaders = import.meta.server ? useRequestHeaders(['host', 'x-forwarded-host', 'x-site']) : undefined
 const { data: storefront, error } = await useFetch<StorefrontPayload>('/api/storefront', { headers: requestHeaders, key: 'storefront' })
@@ -13,17 +14,35 @@ if (error.value || !storefront.value) {
     message: error.value?.message || 'Não foi possível carregar a loja.',
   })
 }
+const payload = storefront.value
 
-const templateRegistry: Record<string, Component> = {
+const homeRegistry: Record<string, Component> = {
   default: defineAsyncComponent(() => import('~/components/templates/TemplateDefault.vue')),
   editorial: defineAsyncComponent(() => import('~/components/templates/TemplateEditorial.vue')),
 }
-const templateKey = storefront.value.site.template?.folder || storefront.value.site.template?.slug || 'fallback'
-const renderer = templateRegistry[templateKey] || TemplateFallback
+const internalRegistry: Record<string, Component> = {
+  default: defineAsyncComponent(() => import('~/components/templates/TemplateDefaultInternal.vue')),
+  editorial: defineAsyncComponent(() => import('~/components/templates/TemplateEditorialInternal.vue')),
+}
+const route = useRoute()
+const page = computed(() => resolveStorefrontPage(route.path))
+const templateKey = payload.site.template?.folder || payload.site.template?.slug || 'fallback'
+const renderer = computed(() => page.value.kind === 'home' ? (homeRegistry[templateKey] || TemplateFallback) : (internalRegistry[templateKey] || TemplateFallback))
 
-useSeoMeta({ title: storefront.value.site.name, description: `Loja ${storefront.value.site.name}`, ogTitle: storefront.value.site.name })
+const requestedPage = page.value
+if (requestedPage.kind === 'not-found'
+  || (requestedPage.kind === 'product' && !payload.products.some(product => product.slug === requestedPage.slug))
+  || (requestedPage.kind === 'category' && !payload.categories.some(category => category.slug === requestedPage.slug))) {
+  throw createError({ statusCode: 404, statusMessage: 'Página não encontrada', message: 'O conteúdo solicitado não existe nesta loja.' })
+}
+
+useSeoMeta({
+  title: () => `${pageTitle(page.value, payload)} | ${payload.site.name}`,
+  description: () => `Conheça ${pageTitle(page.value, payload)} em ${payload.site.name}.`,
+  ogTitle: () => `${pageTitle(page.value, payload)} | ${payload.site.name}`,
+})
 </script>
 
 <template>
-  <component :is="renderer" :storefront="storefront" />
+  <component :is="renderer" :storefront="storefront" :page="page" />
 </template>

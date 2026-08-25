@@ -4,7 +4,7 @@ import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
 const props = defineProps<{ storefront: StorefrontPayload }>()
 const products = computed(() => props.storefront.products.slice(0, 6))
 const lead = computed(() => products.value.find(product => product.image_path) || products.value[0])
-const productImage = (product?: StoreProduct) => product?.image_path || product?.variations.find(variation => variation.image_path)?.image_path || null
+const productImage = (product?: StoreProduct) => product?.image_path || product?.variations?.find(variation => variation.image_path)?.image_path || null
 const money = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 
 useSeoMeta({
@@ -50,7 +50,7 @@ useSeoMeta({
               <img v-if="productImage(product)" :src="productImage(product)!" :alt="product.name" loading="lazy">
               <div v-else class="edit-placeholder"><span>{{ product.name.charAt(0) }}</span></div>
             </NuxtLink>
-            <div class="edit-meta"><div><small>{{ product.categories[0]?.name || 'Coleção' }}</small><h3>{{ product.name }}</h3></div><strong>{{ money(product.price) }}</strong></div>
+            <div class="edit-meta"><div><small>{{ product.categories?.[0]?.name || 'Coleção' }}</small><h3>{{ product.name }}</h3></div><strong>{{ money(product.price) }}</strong></div>
           </article>
         </div>
         <div v-else class="edit-empty"><strong>A coleção está sendo preparada.</strong><span>Volte em breve para conhecer as novidades.</span></div>

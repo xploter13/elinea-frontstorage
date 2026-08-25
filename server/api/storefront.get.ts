@@ -14,6 +14,14 @@ function warningFor(resource: string, reason: unknown): string {
   return `${resource}: ${status}`
 }
 
+function normalizeProducts(products: StoreProduct[]): StoreProduct[] {
+  return products.map(product => ({
+    ...product,
+    variations: Array.isArray(product.variations) ? product.variations : [],
+    categories: Array.isArray(product.categories) ? product.categories : [],
+  }))
+}
+
 export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
   const config = useRuntimeConfig(event)
   const resolvedSite = resolveSite(event, config.storefrontSite)
@@ -46,7 +54,7 @@ export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
 
   return {
     site,
-    products: productsResult.status === 'fulfilled' ? productsResult.value : [],
+    products: productsResult.status === 'fulfilled' ? normalizeProducts(productsResult.value) : [],
     categories: categoriesResult.status === 'fulfilled' ? categoriesResult.value : [],
     analytics: analyticsResult.status === 'fulfilled' ? analyticsResult.value : null,
     newsletter: newsletterResult.status === 'fulfilled' ? newsletterResult.value : null,
