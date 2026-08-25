@@ -1,3 +1,5 @@
+import tailwindcss from '@tailwindcss/vite'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -6,6 +8,7 @@ export default defineNuxtConfig({
     apiBase: 'http://elinea-api.test/api/v1',
     storefrontSite: 'default',
   },
+  css: ['~/assets/css/main.css'],
   app: {
     head: {
       htmlAttrs: { lang: 'pt-BR' },
@@ -15,5 +18,6 @@ export default defineNuxtConfig({
       ],
     },
   },
+  vite: { plugins: [tailwindcss()] },
   typescript: { strict: true, typeCheck: true },
 })

@@ -1,0 +1,8 @@
+<script setup lang="ts">
+import { ChevronDown, SlidersHorizontal } from '@lucide/vue'
+import type { StoreProduct } from '#shared/types/storefront'
+import DefaultProductCard from '../components/DefaultProductCard.vue'
+defineProps<{ products: StoreProduct[], title?: string, description?: string }>()
+</script>
+<template><main class="mx-auto max-w-[1440px] px-4 py-14 sm:px-7 lg:px-10 lg:py-20"><div class="max-w-4xl"><p class="mb-4 text-[11px] font-black uppercase tracking-[.16em] text-market-leaf">Catálogo</p><h1 class="text-[clamp(3.6rem,8vw,7.5rem)] font-black leading-[.82] tracking-[-.08em] text-market-ink">{{ title || 'Todos os produtos.' }}</h1><p v-if="description" class="mt-6 max-w-xl text-base leading-7 text-market-ink/60">{{ description }}</p></div><div class="mb-10 mt-16 flex items-center justify-between border-y border-market-line py-4"><span class="text-xs font-bold text-market-ink/55">{{ products.length }} produtos</span><div class="flex gap-2"><button class="control" type="button"><SlidersHorizontal :size="16"/>Filtrar</button><button class="control" type="button">Ordenar<ChevronDown :size="16"/></button></div></div><div v-if="products.length" class="grid grid-cols-2 gap-x-3 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-5"><DefaultProductCard v-for="product in products" :key="product.id" :product="product"/></div><div v-else class="rounded-[24px] border border-dashed border-market-leaf/40 p-16 text-center text-market-ink/60">Nenhum produto encontrado nesta seleção.</div></main></template>
+<style scoped>@reference "~/assets/css/main.css";.control{@apply flex items-center gap-2 rounded-full border border-market-line bg-white px-4 py-2.5 text-xs font-black text-market-ink transition hover:border-market-leaf}</style>

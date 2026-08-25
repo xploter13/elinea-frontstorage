@@ -17,11 +17,11 @@ if (error.value || !storefront.value) {
 const payload = storefront.value
 
 const homeRegistry: Record<string, Component> = {
-  default: defineAsyncComponent(() => import('~/components/templates/TemplateDefault.vue')),
+  default: defineAsyncComponent(() => import('~/components/templates/default/DefaultTemplate.vue')),
   editorial: defineAsyncComponent(() => import('~/components/templates/TemplateEditorial.vue')),
 }
 const internalRegistry: Record<string, Component> = {
-  default: defineAsyncComponent(() => import('~/components/templates/TemplateDefaultInternal.vue')),
+  default: defineAsyncComponent(() => import('~/components/templates/default/DefaultTemplate.vue')),
   editorial: defineAsyncComponent(() => import('~/components/templates/TemplateEditorialInternal.vue')),
 }
 const route = useRoute()

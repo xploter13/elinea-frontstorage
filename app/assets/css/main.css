@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Aptos", "Segoe UI", Arial, sans-serif;
+  --color-market-ink: #12372a;
+  --color-market-leaf: #1f6b4f;
+  --color-market-citrus: #dff36a;
+  --color-market-mist: #f3f5ee;
+  --color-market-line: #d9ded3;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--color-market-mist); }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  :focus-visible { outline: 3px solid #1f6b4f; outline-offset: 3px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
