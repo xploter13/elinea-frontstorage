@@ -15,7 +15,8 @@ if (error.value || !storefront.value) {
 }
 
 const templateRegistry: Record<string, Component> = {
-  // 'folder-ou-slug': defineAsyncComponent(() => import('~/components/templates/MeuTemplate.vue')),
+  default: defineAsyncComponent(() => import('~/components/templates/TemplateDefault.vue')),
+  editorial: defineAsyncComponent(() => import('~/components/templates/TemplateEditorial.vue')),
 }
 const templateKey = storefront.value.site.template?.folder || storefront.value.site.template?.slug || 'fallback'
 const renderer = templateRegistry[templateKey] || TemplateFallback

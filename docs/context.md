@@ -122,6 +122,17 @@ Um template futuro deve:
 3. ser registrado no `templateRegistry` com a mesma chave de `template.folder`;
 4. usar somente dados do tenant presentes no payload, sem valores fixos de loja.
 
+Renderers disponíveis no MVP:
+
+| Chave (`folder` ou `slug`) | Componente | Direção visual |
+|---|---|---|
+| `default` | `TemplateDefault.vue` | Varejo vibrante, denso e orientado a ofertas |
+| `editorial` | `TemplateEditorial.vue` | Varejo minimalista, assimétrico e orientado a curadoria |
+
+Para testar o segundo renderer, associe na API um template com `folder` ou `slug`
+igual a `editorial`. A seleção continua baseada exclusivamente no template retornado
+por `GET /site`; o frontend não vincula um renderer diretamente a um domínio.
+
 ## Variáveis de ambiente
 
 Copie o arquivo de exemplo:
