@@ -14,10 +14,29 @@ function warningFor(resource: string, reason: unknown): string {
   return `${resource}: ${status}`
 }
 
-function normalizeProducts(products: StoreProduct[]): StoreProduct[] {
+function mediaBaseUrl(apiBase: string): string {
+  return apiBase.replace(/\/api\/v\d+\/?$/, '')
+}
+
+function normalizeMediaUrl(path: string | null | undefined, baseUrl: string): string | null {
+  if (!path) return null
+  if (/^(https?:)?\/\//.test(path) || path.startsWith('data:')) return path
+  if (path.startsWith('/storage/')) return `${baseUrl}${path}`
+  if (path.startsWith('storage/')) return `${baseUrl}/${path}`
+  return `${baseUrl}/storage/${path.replace(/^\/+/, '')}`
+}
+
+function normalizeProducts(products: StoreProduct[], apiBase: string): StoreProduct[] {
+  const baseUrl = mediaBaseUrl(apiBase)
   return products.map(product => ({
     ...product,
-    variations: Array.isArray(product.variations) ? product.variations : [],
+    image_path: product.image_url ?? normalizeMediaUrl(product.image_path, baseUrl),
+    variations: Array.isArray(product.variations)
+      ? product.variations.map(variation => ({
+          ...variation,
+          image_path: normalizeMediaUrl(variation.image_path, baseUrl),
+        }))
+      : [],
     categories: Array.isArray(product.categories) ? product.categories : [],
   }))
 }
@@ -54,7 +73,7 @@ export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
 
   return {
     site,
-    products: productsResult.status === 'fulfilled' ? normalizeProducts(productsResult.value) : [],
+    products: productsResult.status === 'fulfilled' ? normalizeProducts(productsResult.value, options.apiBase) : [],
     categories: categoriesResult.status === 'fulfilled' ? categoriesResult.value : [],
     analytics: analyticsResult.status === 'fulfilled' ? analyticsResult.value : null,
     newsletter: newsletterResult.status === 'fulfilled' ? newsletterResult.value : null,

@@ -57,6 +57,7 @@ export interface StoreProduct {
   description: string | null
   excerpt: string | null
   image_path: string | null
+  image_url?: string | null
   meta_description: string | null
   brand_id: number | null
   categories: StoreCategory[]
