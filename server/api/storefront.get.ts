@@ -1,4 +1,4 @@
-import type { AnalyticsConfiguration, StoreCategory, StoreProduct, StoreSite, StorefrontPayload } from '#shared/types/storefront'
+import type { AnalyticsConfiguration, StoreCategory, StoreProduct, StoreSite, StoreTheme, StorefrontPayload } from '#shared/types/storefront'
 
 function resolveSite(event: Parameters<typeof getRequestHost>[0], fallback: string): string {
   const explicitSite = getRequestHeader(event, 'x-site')?.trim()
@@ -41,6 +41,26 @@ function normalizeProducts(products: StoreProduct[], apiBase: string): StoreProd
   }))
 }
 
+function normalizeTheme(theme: StoreTheme | null | undefined, apiBase: string): StoreTheme | null {
+  if (!theme) return null
+
+  const baseUrl = mediaBaseUrl(apiBase)
+  return {
+    ...theme,
+    logo_url: normalizeMediaUrl(theme.logo_path, baseUrl) ?? normalizeMediaUrl(theme.logo_url, baseUrl),
+    favicon_url: normalizeMediaUrl(theme.favicon_path, baseUrl) ?? normalizeMediaUrl(theme.favicon_url, baseUrl),
+    hero_image_url: normalizeMediaUrl(theme.hero_image_path, baseUrl) ?? normalizeMediaUrl(theme.hero_image_url, baseUrl),
+    show_newsletter: theme.show_newsletter !== false,
+  }
+}
+
+function normalizeSite(site: StoreSite, apiBase: string): StoreSite {
+  return {
+    ...site,
+    theme: normalizeTheme(site.theme, apiBase),
+  }
+}
+
 export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
   const config = useRuntimeConfig(event)
   const resolvedSite = resolveSite(event, config.storefrontSite)
@@ -48,7 +68,7 @@ export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
   let site: StoreSite
 
   try {
-    site = await fetchStorefrontResource<StoreSite>('/site', options)
+    site = normalizeSite(await fetchStorefrontResource<StoreSite>('/site', options), options.apiBase)
   } catch (error) {
     const upstreamStatus = error && typeof error === 'object' && 'statusCode' in error ? Number(error.statusCode) : 502
     const notFound = upstreamStatus === 404

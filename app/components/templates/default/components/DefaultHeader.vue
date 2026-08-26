@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Heart, Menu, Search, ShoppingBag, UserRound, X } from '@lucide/vue'
 
-defineProps<{ storeName: string }>()
+defineProps<{ storeName: string, logoUrl?: string | null }>()
 const menuOpen = ref(false)
 const searchOpen = ref(false)
 </script>
@@ -11,7 +11,10 @@ const searchOpen = ref(false)
     <div class="bg-market-ink px-4 py-2 text-center text-[11px] font-bold tracking-[.08em] text-white sm:text-xs">Frete calculado no carrinho · Compra protegida</div>
     <header class="mx-auto grid h-[72px] max-w-[1440px] grid-cols-[auto_1fr_auto] items-center gap-5 px-4 sm:px-7 lg:px-10">
       <button class="grid size-10 place-items-center rounded-full border border-market-line lg:hidden" type="button" :aria-expanded="menuOpen" aria-label="Abrir menu" @click="menuOpen = !menuOpen"><X v-if="menuOpen" :size="20"/><Menu v-else :size="20"/></button>
-      <NuxtLink to="/" class="text-xl font-black tracking-[-.06em] text-market-ink no-underline sm:text-2xl">{{ storeName }}</NuxtLink>
+      <NuxtLink to="/" class="flex min-w-0 items-center text-xl font-black tracking-[-.06em] text-market-ink no-underline sm:text-2xl">
+        <img v-if="logoUrl" :src="logoUrl" :alt="storeName" class="max-h-10 max-w-[180px] object-contain" />
+        <span v-else class="truncate">{{ storeName }}</span>
+      </NuxtLink>
       <nav class="hidden items-center justify-center gap-8 lg:flex" aria-label="Navegação principal">
         <NuxtLink to="/" class="nav-link">Início</NuxtLink><NuxtLink to="/produtos" class="nav-link">Produtos</NuxtLink><NuxtLink to="/categorias" class="nav-link">Categorias</NuxtLink>
       </nav>

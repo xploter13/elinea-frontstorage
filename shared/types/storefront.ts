@@ -9,6 +9,23 @@ export interface StoreTemplate {
   preview_image: string | null
 }
 
+export interface StoreTheme {
+  logo_path: string | null
+  favicon_path: string | null
+  hero_image_path: string | null
+  logo_url: string | null
+  favicon_url: string | null
+  hero_image_url: string | null
+  primary_color: string | null
+  secondary_color: string | null
+  accent_color: string | null
+  font_family: string | null
+  hero_title: string | null
+  hero_subtitle: string | null
+  featured_title: string | null
+  show_newsletter: boolean
+}
+
 export interface StoreSite {
   id: number
   name: string
@@ -21,6 +38,7 @@ export interface StoreSite {
   billing_ends_at: string | null
   trial_ends_at: string | null
   template: StoreTemplate | null
+  theme: StoreTheme | null
 }
 
 export interface StoreCategory {
