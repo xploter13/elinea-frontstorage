@@ -1,0 +1,11 @@
+<script setup lang="ts">
+import { ArrowRight, ShoppingBasket } from '@lucide/vue'
+</script>
+
+<template>
+  <main class="cart-page"><div class="cart-visual"><div class="basket"><ShoppingBasket :size="38"/><i v-for="n in 6" :key="n"></i></div></div><div class="cart-copy"><span>Sua cesta</span><h1>Pronta para receber cuidado.</h1><p>Adicione os produtos que fazem sentido para a sua rotina. Você poderá revisar tudo antes de finalizar.</p><NuxtLink to="/produtos">Explorar produtos <ArrowRight :size="18"/></NuxtLink><NuxtLink to="/checkout" class="checkout-link">Visualizar checkout compartilhado</NuxtLink></div></main>
+</template>
+
+<style scoped>
+.cart-page{display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;gap:clamp(50px,9vw,130px);max-width:1250px;min-height:650px;margin:auto;padding:70px 32px}.cart-visual{display:grid;aspect-ratio:1;place-items:center;border-radius:22px;background:#e8f1ff}.basket{position:relative;display:grid;width:190px;height:190px;grid-template-columns:repeat(3,1fr);gap:12px;padding:25px;border:2px solid #aac4e5;border-radius:32px 32px 32px 10px;color:#315f97}.basket>svg{position:absolute;left:50%;top:-21px;transform:translateX(-50%);padding:8px;border-radius:50%;background:#315f97;color:#fff;box-sizing:content-box}.basket i{border-radius:50%;background:#d0e0f3}.cart-copy>span{color:var(--ph-primary);font:800 10px ui-monospace,monospace;letter-spacing:.15em;text-transform:uppercase}.cart-copy h1{max-width:720px;margin:14px 0 22px;font-family:"Trebuchet MS",sans-serif;font-size:clamp(56px,7vw,92px);line-height:.88;letter-spacing:-.075em}.cart-copy p{max-width:520px;color:#637a75;line-height:1.65}.cart-copy>a{display:inline-flex;height:50px;align-items:center;gap:9px;margin-top:20px;padding:0 20px;border-radius:10px;background:var(--ph-primary);color:#fff;font-size:12px;font-weight:800;text-decoration:none}.cart-copy>a.checkout-link{display:flex;width:max-content;height:auto;margin-top:15px;padding:0;border-radius:0;background:transparent;color:#728681;font-size:10px;text-decoration:underline}@media(max-width:760px){.cart-page{grid-template-columns:1fr;padding:45px 18px}.cart-visual{max-width:420px}.cart-copy h1{font-size:58px}}
+</style>

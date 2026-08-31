@@ -128,6 +128,25 @@ Renderers disponíveis no MVP:
 |---|---|---|
 | `default` | `TemplateDefault.vue` | Varejo vibrante, denso e orientado a ofertas |
 | `editorial` | `TemplateEditorial.vue` | Varejo minimalista, assimétrico e orientado a curadoria |
+| `pharmacy` ou `farmacia` | `pharmacy/PharmacyTemplate.vue` | Farmácia flat, acessível e orientada a rotinas de cuidado |
+
+### Páginas compartilhadas
+
+Checkout e área do cliente não pertencem a um tema específico. A rota catch-all
+renderiza os componentes de `app/components/shared` antes de consultar o registro
+de templates, mantendo a mesma experiência em todos os segmentos:
+
+| Rota | Componente compartilhado |
+|---|---|
+| `/checkout` | `SharedCheckout.vue` |
+| `/conta` | `SharedCustomerArea.vue` |
+| `/conta/pedidos` | `SharedCustomerArea.vue` |
+| `/conta/enderecos` | `SharedCustomerArea.vue` |
+| `/conta/dados` | `SharedCustomerArea.vue` |
+
+Os formulários e ações de compra permanecem em estado de integração até que os
+contratos de carrinho, autenticação, endereço e pagamento sejam disponibilizados
+pela API.
 
 Para testar o segundo renderer, associe na API um template com `folder` ou `slug`
 igual a `editorial`. A seleção continua baseada exclusivamente no template retornado
@@ -228,3 +247,12 @@ Invoke-WebRequest `
 
 Essa tolerância parcial permite que uma integração secundária indisponível não
 derrube toda a storefront, mas mantém a resolução da loja como requisito obrigatório.
+
+## Temas gerenciáveis
+
+- O contrato completo para criação, registro, ativação e personalização de temas
+  está em `docs/themes.md`.
+- `folder` seleciona o renderer e `segment` controla a compatibilidade comercial.
+- Checkout e área do cliente permanecem compartilhados pelo roteador central.
+- O tema `pharmacy` possui conteúdo principal gerenciável pelo painel, além de
+  cores, tipografia e imagens.

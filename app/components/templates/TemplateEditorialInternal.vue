@@ -24,6 +24,7 @@ const heading = computed(() => category.value?.name || (props.page.kind === 'cat
       <nav aria-label="Navegação principal">
         <NuxtLink to="/produtos">Coleção</NuxtLink>
         <NuxtLink to="/categorias">Categorias</NuxtLink>
+        <NuxtLink to="/conta">Conta</NuxtLink>
       </nav>
       <NuxtLink class="bag" to="/carrinho">Sacola (0)</NuxtLink>
     </header>

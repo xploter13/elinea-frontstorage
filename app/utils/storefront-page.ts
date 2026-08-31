@@ -7,6 +7,8 @@ export type StorefrontPage =
   | { kind: 'category', slug: string }
   | { kind: 'product', slug: string }
   | { kind: 'cart' }
+  | { kind: 'checkout' }
+  | { kind: 'account', section: 'overview' | 'orders' | 'addresses' | 'profile' }
   | { kind: 'not-found' }
 
 export function resolveStorefrontPage(path: string): StorefrontPage {
@@ -15,6 +17,14 @@ export function resolveStorefrontPage(path: string): StorefrontPage {
   if (segments.length === 1 && segments[0] === 'produtos') return { kind: 'products' }
   if (segments.length === 1 && segments[0] === 'categorias') return { kind: 'categories' }
   if (segments.length === 1 && segments[0] === 'carrinho') return { kind: 'cart' }
+  if (segments.length === 1 && segments[0] === 'checkout') return { kind: 'checkout' }
+  if (segments.length === 1 && segments[0] === 'conta') return { kind: 'account', section: 'overview' }
+  if (segments.length === 2 && segments[0] === 'conta') {
+    const section = segments[1]
+    if (section === 'pedidos') return { kind: 'account', section: 'orders' }
+    if (section === 'enderecos') return { kind: 'account', section: 'addresses' }
+    if (section === 'dados') return { kind: 'account', section: 'profile' }
+  }
   if (segments.length === 2 && segments[0] === 'produto' && segments[1]) return { kind: 'product', slug: segments[1] }
   if (segments.length === 2 && segments[0] === 'categoria' && segments[1]) return { kind: 'category', slug: segments[1] }
   return { kind: 'not-found' }
@@ -26,5 +36,12 @@ export function pageTitle(page: StorefrontPage, storefront: StorefrontPayload): 
   if (page.kind === 'products') return 'Produtos'
   if (page.kind === 'categories') return 'Categorias'
   if (page.kind === 'cart') return 'Carrinho'
+  if (page.kind === 'checkout') return 'Finalizar compra'
+  if (page.kind === 'account') {
+    if (page.section === 'orders') return 'Meus pedidos'
+    if (page.section === 'addresses') return 'Meus endereços'
+    if (page.section === 'profile') return 'Meus dados'
+    return 'Minha conta'
+  }
   return storefront.site.name
 }

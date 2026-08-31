@@ -1,0 +1,12 @@
+<script setup lang="ts">
+import { Clock3, Mail, MapPin, ShieldCheck } from '@lucide/vue'
+defineProps<{ storeName: string }>()
+</script>
+
+<template>
+  <footer class="ph-footer"><div class="footer-grid"><div class="footer-brand"><span class="footer-cross">+</span><h2>{{ storeName }}</h2><p>Cuidado próximo, orientação clara e uma compra que respeita o seu tempo.</p></div><div><h3>Encontre</h3><NuxtLink to="/produtos">Todos os produtos</NuxtLink><NuxtLink to="/categorias">Cuidados por categoria</NuxtLink><NuxtLink to="/conta/pedidos">Acompanhar pedido</NuxtLink></div><div><h3>Atendimento</h3><p><Clock3 :size="17"/>Todos os dias, 7h às 23h</p><p><Mail :size="17"/>Fale com a farmácia</p><p><MapPin :size="17"/>Consulte a entrega pelo CEP</p></div><div class="safe"><ShieldCheck :size="24"/><strong>Seus dados protegidos</strong><span>Compra em ambiente seguro.</span></div></div><div class="footer-bottom"><span>© {{ new Date().getFullYear() }} {{ storeName }}</span><span>Comércio digital por Elinea</span></div></footer>
+</template>
+
+<style scoped>
+.ph-footer{margin-top:100px;background:var(--ph-ink);color:#fff}.footer-grid{display:grid;grid-template-columns:1.35fr .8fr 1fr .8fr;gap:55px;max-width:1400px;margin:auto;padding:70px 32px}.footer-brand h2{margin:15px 0 10px;font-family:"Trebuchet MS",sans-serif;font-size:28px;letter-spacing:-.045em}.footer-brand p{max-width:320px;color:#aac3bd;font-size:13px;line-height:1.6}.footer-cross{display:grid;width:38px;height:38px;place-items:center;border-radius:11px 11px 11px 3px;background:#a9e6d4;color:var(--ph-ink);font-size:28px}.footer-grid>div:not(.footer-brand):not(.safe){display:grid;align-content:start;justify-items:start;gap:12px}.footer-grid h3{margin:0 0 9px;color:#a9e6d4;font:800 10px ui-monospace,monospace;letter-spacing:.15em;text-transform:uppercase}.footer-grid a,.footer-grid p{display:flex;align-items:center;gap:8px;margin:0;color:#d5e1de;font-size:12px;text-decoration:none}.safe{align-self:start;display:grid;gap:7px;padding:20px;border:1px solid #47645d;border-radius:12px;color:#a9e6d4}.safe strong{font-size:12px;color:#fff}.safe span{font-size:11px;color:#aac3bd}.footer-bottom{display:flex;justify-content:space-between;max-width:1400px;margin:auto;padding:22px 32px;border-top:1px solid #3c5b54;color:#8eaaa3;font:700 10px ui-monospace,monospace}@media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}.safe{display:none}}@media(max-width:560px){.footer-grid{grid-template-columns:1fr;padding:50px 20px}.footer-bottom{flex-direction:column;gap:8px;padding:20px}}
+</style>

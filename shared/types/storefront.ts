@@ -24,6 +24,27 @@ export interface StoreTheme {
   hero_subtitle: string | null
   featured_title: string | null
   show_newsletter: boolean
+  header_message: string | null
+  contact_phone: string | null
+  service_hours: string | null
+  hero_eyebrow: string | null
+  hero_cta_label: string | null
+  categories_title: string | null
+  promo_primary_title: string | null
+  promo_primary_text: string | null
+  promo_secondary_title: string | null
+  promo_secondary_text: string | null
+  promo_tertiary_title: string | null
+  promo_tertiary_text: string | null
+  offers_callout_title: string | null
+  offers_callout_text: string | null
+  popular_title: string | null
+  newsletter_eyebrow: string | null
+  newsletter_title: string | null
+  newsletter_text: string | null
+  newsletter_button_label: string | null
+  footer_tagline: string | null
+  footer_description: string | null
 }
 
 export interface StoreSite {

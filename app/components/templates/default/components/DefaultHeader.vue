@@ -20,7 +20,7 @@ const searchOpen = ref(false)
       </nav>
       <div class="flex justify-end gap-1 text-market-ink">
         <button class="icon-button hidden sm:grid" type="button" aria-label="Buscar" @click="searchOpen = !searchOpen"><Search :size="20" :stroke-width="1.8"/></button>
-        <button class="icon-button hidden sm:grid" type="button" aria-label="Minha conta"><UserRound :size="20" :stroke-width="1.8"/></button>
+        <NuxtLink class="icon-button hidden sm:grid" to="/conta" aria-label="Minha conta"><UserRound :size="20" :stroke-width="1.8"/></NuxtLink>
         <button class="icon-button hidden md:grid" type="button" aria-label="Favoritos"><Heart :size="20" :stroke-width="1.8"/></button>
         <NuxtLink class="icon-button relative" to="/carrinho" aria-label="Carrinho"><ShoppingBag :size="20" :stroke-width="1.8"/><span class="absolute right-0 top-0 grid size-4 place-items-center rounded-full bg-market-citrus text-[9px] font-black">0</span></NuxtLink>
       </div>

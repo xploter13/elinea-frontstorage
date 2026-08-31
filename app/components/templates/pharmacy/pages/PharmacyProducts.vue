@@ -1,0 +1,19 @@
+<script setup lang="ts">
+import { ChevronDown, Search, SlidersHorizontal } from '@lucide/vue'
+import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
+import PharmacyProductCard from '../components/PharmacyRetailProductCard.vue'
+const props = defineProps<{ products: StoreProduct[], storefront: StorefrontPayload, title?: string, description?: string }>()
+const search = ref('')
+const filtered = computed(() => {
+  const term = search.value.trim().toLocaleLowerCase('pt-BR')
+  return term ? props.products.filter(item => `${item.name} ${item.categories.map(category => category.name).join(' ')}`.toLocaleLowerCase('pt-BR').includes(term)) : props.products
+})
+</script>
+
+<template>
+  <main class="catalog"><div class="catalog-heading"><span>Catálogo da farmácia</span><h1>{{ title || 'Tudo para cuidar de você.' }}</h1><p>{{ description || 'Encontre medicamentos, higiene, beleza e itens para o cuidado de toda a família.' }}</p></div><div class="catalog-tools"><label><Search :size="18"/><span class="sr-only">Buscar nesta seleção</span><input v-model="search" placeholder="Buscar nesta seleção"></label><div><button type="button"><SlidersHorizontal :size="16"/>Filtrar</button><button type="button">Mais relevantes<ChevronDown :size="16"/></button></div></div><div class="result-row"><span>{{ filtered.length }} {{ filtered.length === 1 ? 'produto encontrado' : 'produtos encontrados' }}</span><span v-if="search">Busca por “{{ search }}”</span></div><div v-if="filtered.length" class="catalog-grid"><PharmacyProductCard v-for="product in filtered" :key="product.id" :product="product" :storefront="storefront"/></div><div v-else class="no-results"><Search :size="26"/><h2>Nenhum produto encontrado.</h2><p>Tente buscar com menos palavras ou explore todas as categorias.</p><button v-if="search" type="button" @click="search=''">Limpar busca</button></div></main>
+</template>
+
+<style scoped>
+.catalog{max-width:1440px;margin:auto;padding:70px 32px 40px}.catalog-heading>span{color:var(--ph-primary);font:800 10px ui-monospace,monospace;letter-spacing:.15em;text-transform:uppercase}.catalog-heading h1{max-width:930px;margin:13px 0 18px;font-family:"Trebuchet MS",sans-serif;font-size:clamp(52px,7vw,96px);line-height:.87;letter-spacing:-.075em}.catalog-heading p{max-width:620px;color:#647b76;line-height:1.65}.catalog-tools{display:flex;align-items:center;justify-content:space-between;gap:25px;margin-top:58px;padding:18px 0;border-block:1px solid #d8e5e1}.catalog-tools>label{display:flex;width:min(440px,100%);height:45px;align-items:center;gap:10px;padding:0 14px;border:1px solid #ccdbd7;border-radius:10px;background:#fff;color:#6a807b}.catalog-tools input{min-width:0;flex:1;border:0;outline:0}.catalog-tools>div{display:flex;gap:8px}.catalog-tools button{display:flex;height:40px;align-items:center;gap:8px;padding:0 14px;border:1px solid #d0ddd9;border-radius:9px;background:#fff;color:var(--ph-ink);font-size:11px;font-weight:800}.result-row{display:flex;justify-content:space-between;padding:21px 0;color:#71847f;font:700 10px ui-monospace,monospace;text-transform:uppercase}.catalog-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:45px 16px}.no-results{display:grid;justify-items:center;padding:90px 20px;border:1px dashed #bfd0cb;border-radius:16px;text-align:center;color:#71847f}.no-results h2{margin:18px 0 8px;color:var(--ph-ink);font-family:"Trebuchet MS",sans-serif}.no-results p{margin:0}.no-results button{margin-top:22px;padding:12px 16px;border:0;border-radius:9px;background:var(--ph-primary);color:#fff;font-weight:800}@media(max-width:900px){.catalog-grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:650px){.catalog{padding:50px 16px}.catalog-heading h1{font-size:54px}.catalog-tools{align-items:stretch;flex-direction:column}.catalog-tools>label{width:100%}.catalog-tools>div{justify-content:space-between}.catalog-grid{grid-template-columns:repeat(2,1fr);gap:35px 10px}}
+</style>

@@ -17,7 +17,7 @@ useSeoMeta({
   <div class="edit-shell">
     <header class="edit-header">
       <NuxtLink class="edit-logo" to="/">{{ storefront.site.name }}</NuxtLink>
-      <nav aria-label="Navegação principal"><NuxtLink to="/produtos">Coleção</NuxtLink><NuxtLink to="/categorias">Categorias</NuxtLink></nav>
+      <nav aria-label="Navegação principal"><NuxtLink to="/produtos">Coleção</NuxtLink><NuxtLink to="/categorias">Categorias</NuxtLink><NuxtLink to="/conta">Conta</NuxtLink></nav>
       <NuxtLink class="edit-bag" to="/carrinho">Sacola (0)</NuxtLink>
     </header>
 
