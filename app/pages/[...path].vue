@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { StorefrontPayload } from '#shared/types/storefront'
 import TemplateFallback from '~/components/templates/TemplateFallback.vue'
-import SharedCheckout from '~/components/shared/SharedCheckout.vue'
-import SharedCustomerArea from '~/components/shared/SharedCustomerArea.vue'
+import SharedCheckout from '~~/layers/storefront-core/app/components/SharedCheckout.vue'
+import SharedCustomerArea from '~~/layers/storefront-core/app/components/SharedCustomerArea.vue'
 import { resolveStorefrontTemplate } from '~/templates/template-registry'
 import { pageTitle, resolveStorefrontPage } from '~/utils/storefront-page'
 

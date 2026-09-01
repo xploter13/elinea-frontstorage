@@ -2,6 +2,7 @@
 import { ArrowRight, ChevronRight, CircleUserRound, House, LogIn, MapPin, Package, UserRound } from '@lucide/vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
 import type { StorefrontPage } from '~/utils/storefront-page'
+import SharedCommerceHeader from './SharedCommerceHeader.vue'
 
 const props = defineProps<{ storefront: StorefrontPayload, page: StorefrontPage }>()
 const section = computed(() => props.page.kind === 'account' ? props.page.section : 'overview')

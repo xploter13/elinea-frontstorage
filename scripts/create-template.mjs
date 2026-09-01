@@ -17,13 +17,26 @@ if (!templateKey || !/^[a-z0-9][a-z0-9-]*$/.test(templateKey)) {
 }
 
 const projectRoot = resolve(import.meta.dirname, '..')
-const blueprintPath = resolve(projectRoot, 'app/components/templates/pharmacy')
+const sourceTemplate = process.argv.includes('--from')
+  ? process.argv[process.argv.indexOf('--from') + 1]?.trim()
+  : 'base'
+const blueprintPath = resolve(projectRoot, 'app/components/templates', sourceTemplate || 'base')
 const targetPath = resolve(projectRoot, 'app/components/templates', templateKey)
 const templateName = templateKey
   .split('-')
   .map(part => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
   .join('')
 const brandingName = `${templateName.charAt(0).toLowerCase()}${templateName.slice(1)}Branding`
+const sourceTemplateName = (sourceTemplate || 'base')
+  .split('-')
+  .map(part => `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+  .join('')
+const sourceBrandingName = `${sourceTemplateName.charAt(0).toLowerCase()}${sourceTemplateName.slice(1)}Branding`
+
+if (!existsSync(blueprintPath)) {
+  console.error(`O template base "${sourceTemplate}" não existe.`)
+  process.exit(1)
+}
 
 if (existsSync(targetPath)) {
   console.error(`O template ${templateKey} já existe.`)
@@ -42,15 +55,15 @@ const customizeBlueprint = (directory) => {
     }
 
     const source = readFileSync(entryPath, 'utf8')
-      .replaceAll('pharmacyBranding', brandingName)
-      .replaceAll('pharmacy.config', `${templateKey}.config`)
-      .replaceAll('Pharmacy', templateName)
+      .replaceAll(sourceBrandingName, brandingName)
+      .replaceAll(`${sourceTemplate}.config`, `${templateKey}.config`)
+      .replaceAll(sourceTemplateName, templateName)
 
     writeFileSync(entryPath, source)
 
     const renamedEntry = basename(entryPath)
-      .replaceAll('pharmacy.config', `${templateKey}.config`)
-      .replaceAll('Pharmacy', templateName)
+      .replaceAll(`${sourceTemplate}.config`, `${templateKey}.config`)
+      .replaceAll(sourceTemplateName, templateName)
 
     if (renamedEntry !== basename(entryPath)) {
       renameSync(entryPath, resolve(dirname(entryPath), renamedEntry))
@@ -60,5 +73,5 @@ const customizeBlueprint = (directory) => {
 
 customizeBlueprint(targetPath)
 
-console.log(`Template ${templateKey} criado a partir do blueprint Farmácia.`)
+console.log(`Template ${templateKey} criado a partir do blueprint ${sourceTemplate}.`)
 console.log(`Personalize ${targetPath} e associe o campo folder do Template técnico a "${templateKey}".`)

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Check, ChevronLeft, CreditCard, MapPin, PackageCheck, Truck } from '@lucide/vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
-import { useStorefrontCatalog } from '~~/layers/storefront-core/app/composables/useStorefrontCatalog'
-import { useStorefrontCommerce } from '~~/layers/storefront-core/app/composables/useStorefrontCommerce'
+import { useStorefrontCatalog } from '../composables/useStorefrontCatalog'
+import { useStorefrontCommerce } from '../composables/useStorefrontCommerce'
+import SharedCommerceHeader from './SharedCommerceHeader.vue'
 
 const props = defineProps<{ storefront: StorefrontPayload }>()
 const { money, productImage } = useStorefrontCatalog(props.storefront)
