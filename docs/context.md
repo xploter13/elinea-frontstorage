@@ -69,6 +69,20 @@ As respostas Laravel usam o envelope padrão:
 `GET /site` retorna um único objeto quando o tenant foi resolvido. A listagem de
 lojas pertence a `GET /sites` e retorna um array em `data`.
 
+### Carrinho visitante e lista de desejos
+
+O navegador não chama a API Laravel diretamente. As rotas internas do Nuxt em
+`/api/cart` encaminham as operações para `/api/v1/cart`, preservando `X-Site` e
+`X-Cart-Session`. O identificador anônimo é criado uma única vez por loja e salvo
+no `localStorage` com a chave `elinea:cart-session:{site}`. Assim, adicionar,
+alterar quantidade e remover itens não dependem de login.
+
+A lista de desejos também funciona para visitantes e fica no `localStorage`,
+isolada por loja pela chave `elinea:wishlist:{site}`. Ela é deliberadamente local
+até o módulo `Customer` expor um contrato público para sincronização. O estado
+compartilhado dessas duas experiências fica em
+`app/composables/useStorefrontCommerce.ts`.
+
 ## Lojas conhecidas no MVP
 
 | ID | Nome | Slug | Domínio | Template |
@@ -144,9 +158,9 @@ de templates, mantendo a mesma experiência em todos os segmentos:
 | `/conta/enderecos` | `SharedCustomerArea.vue` |
 | `/conta/dados` | `SharedCustomerArea.vue` |
 
-Os formulários e ações de compra permanecem em estado de integração até que os
-contratos de carrinho, autenticação, endereço e pagamento sejam disponibilizados
-pela API.
+O checkout compartilhado já consome o carrinho real, inclusive o carrinho
+visitante. Endereço, frete, pagamento e autenticação continuam sendo etapas
+compartilhadas e devem evoluir fora dos renderers de tema.
 
 Para testar o segundo renderer, associe na API um template com `folder` ou `slug`
 igual a `editorial`. A seleção continua baseada exclusivamente no template retornado

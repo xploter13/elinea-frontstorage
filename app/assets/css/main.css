@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default;
+}
 
 @theme {
   --font-sans: "Aptos", "Segoe UI", Arial, sans-serif;

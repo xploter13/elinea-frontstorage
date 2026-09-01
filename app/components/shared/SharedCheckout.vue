@@ -4,8 +4,9 @@ import type { StorefrontPayload } from '#shared/types/storefront'
 
 const props = defineProps<{ storefront: StorefrontPayload }>()
 const { money, productImage } = useStorefrontCatalog(props.storefront)
-const sample = computed(() => props.storefront.products[0])
+const { cart, cartProducts, initialize } = useStorefrontCommerce(props.storefront)
 const delivery = ref<'standard' | 'express'>('standard')
+onMounted(initialize)
 </script>
 
 <template>
@@ -39,9 +40,9 @@ const delivery = ref<'standard' | 'express'>('standard')
 
       <aside class="summary">
         <span class="summary-label">Resumo</span><h2>Seu pedido</h2>
-        <div v-if="sample" class="summary-product"><div class="summary-image"><img v-if="productImage(sample)" :src="productImage(sample)!" :alt="sample.name"><span v-else>{{ sample.name.charAt(0) }}</span></div><div><strong>{{ sample.name }}</strong><small>1 unidade</small></div><b>{{ money(sample.price) }}</b></div>
-        <p v-else class="empty-summary">Seu carrinho está vazio. Adicione produtos antes de finalizar.</p>
-        <dl><div><dt>Subtotal</dt><dd>{{ sample ? money(sample.price) : money(0) }}</dd></div><div><dt>Entrega</dt><dd>A calcular</dd></div><div class="total"><dt>Total</dt><dd>{{ sample ? money(sample.price) : money(0) }}</dd></div></dl>
+        <div v-for="entry in cartProducts" :key="entry.item.id" class="summary-product"><div class="summary-image"><img v-if="entry.product&&productImage(entry.product)" :src="productImage(entry.product)!" :alt="entry.item.name"><span v-else>{{ entry.item.name.charAt(0) }}</span></div><div><strong>{{ entry.item.name }}</strong><small>{{ entry.item.quantity }} {{ entry.item.quantity===1?'unidade':'unidades' }}</small></div><b>{{ money(entry.item.total) }}</b></div>
+        <p v-if="!cartProducts.length" class="empty-summary">Seu carrinho está vazio. Adicione produtos antes de finalizar.</p>
+        <dl><div><dt>Subtotal</dt><dd>{{ money(cart.totals.items_total) }}</dd></div><div><dt>Entrega</dt><dd>A calcular</dd></div><div class="total"><dt>Total</dt><dd>{{ money(cart.totals.total) }}</dd></div></dl>
         <div class="summary-safe"><MapPin :size="18"/><p><strong>Entrega protegida</strong><span>Você acompanha cada etapa do pedido.</span></p></div>
       </aside>
     </main>

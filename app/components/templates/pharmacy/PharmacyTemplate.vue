@@ -3,6 +3,7 @@ import type { StorefrontPayload } from '#shared/types/storefront'
 import type { StorefrontPage } from '~/utils/storefront-page'
 import PharmacyFooter from './components/PharmacyRetailFooter.vue'
 import PharmacyHeader from './components/PharmacyRetailHeader.vue'
+import PharmacyCommerceOverlay from './components/PharmacyCommerceOverlay.vue'
 import PharmacyCart from './pages/PharmacyCart.vue'
 import PharmacyCategories from './pages/PharmacyCategories.vue'
 import PharmacyHome from './pages/PharmacyRetailHome.vue'
@@ -25,19 +26,30 @@ const themeStyle = computed(() => ({
   '--ph-ink': theme.value?.secondary_color || '#153b36',
   '--ph-accent': theme.value?.accent_color || '#ff6b5f',
   '--ph-body': `"${theme.value?.font_family || 'Georgia'}", Georgia, Cambria, "Times New Roman", serif`,
+  '--color-primary': theme.value?.primary_color || '#177c68',
+  '--color-primary-content': '#ffffff',
+  '--color-secondary': theme.value?.accent_color || '#ff6b5f',
+  '--color-secondary-content': '#ffffff',
+  '--color-base-100': '#ffffff',
+  '--color-base-200': '#f3f7f5',
+  '--color-base-300': '#dfe8e5',
+  '--color-base-content': theme.value?.secondary_color || '#153b36',
+  '--radius-box': '0.75rem',
+  '--radius-field': '0.5rem',
 }))
 </script>
 
 <template>
-  <div class="pharmacy-shell" :style="themeStyle">
-    <PharmacyHeader :store-name="storefront.site.name" :logo-url="theme?.logo_url" :categories="storefront.categories" :theme="theme" />
+  <div class="pharmacy-shell" data-theme="light" :style="themeStyle">
+    <PharmacyHeader :storefront="storefront" :store-name="storefront.site.name" :logo-url="theme?.logo_url" :categories="storefront.categories" :theme="theme" />
     <PharmacyHome v-if="page.kind === 'home'" :storefront="storefront" />
     <PharmacyProducts v-else-if="page.kind === 'products'" :storefront="storefront" :products="storefront.products" />
     <PharmacyCategories v-else-if="page.kind === 'categories'" :categories="storefront.categories" />
     <PharmacyProducts v-else-if="page.kind === 'category' && category" :storefront="storefront" :products="categoryProducts" :title="category.name" :description="category.description || undefined" />
     <PharmacyProductDetail v-else-if="page.kind === 'product' && product" :product="product" :storefront="storefront" />
-    <PharmacyCart v-else-if="page.kind === 'cart'" />
+    <PharmacyCart v-else-if="page.kind === 'cart'" :storefront="storefront" />
     <PharmacyFooter :store-name="storefront.site.name" :theme="theme" />
+    <PharmacyCommerceOverlay :storefront="storefront" />
   </div>
 </template>
 

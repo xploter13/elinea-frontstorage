@@ -1,0 +1,154 @@
+import type { ApiEnvelope } from '#shared/types/storefront'
+import type { StoreCart } from '#shared/types/commerce'
+import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
+
+const emptyCart = (): StoreCart => ({
+  id: 0,
+  coupon_code: null,
+  items: [],
+  totals: { items_count: 0, items_total: 0, discount: 0, shipping: 0, total: 0 },
+})
+
+export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
+  const namespace = storefront.site.slug
+  const cart = useState<StoreCart>(`commerce:cart:${namespace}`, emptyCart)
+  const initialized = useState<boolean>(`commerce:initialized:${namespace}`, () => false)
+  const cartOpen = useState<boolean>(`commerce:cart-open:${namespace}`, () => false)
+  const wishlistOpen = useState<boolean>(`commerce:wishlist-open:${namespace}`, () => false)
+  const wishlist = useState<number[]>(`commerce:wishlist:${namespace}`, () => [])
+  const wishlistHydrated = useState<boolean>(`commerce:wishlist-hydrated:${namespace}`, () => false)
+  const busyProducts = useState<number[]>(`commerce:busy:${namespace}`, () => [])
+  const notice = useState<{ message: string, type: 'success' | 'error' } | null>(`commerce:notice:${namespace}`, () => null)
+  let noticeTimer: ReturnType<typeof setTimeout> | undefined
+
+  const sessionKey = `elinea:cart-session:${namespace}`
+  const wishlistKey = `elinea:wishlist:${namespace}`
+
+  const ensureSession = () => {
+    if (!import.meta.client) return ''
+    const current = localStorage.getItem(sessionKey)
+    if (current) return current
+    const generated = globalThis.crypto?.randomUUID?.() || `guest-${Date.now()}-${Math.random().toString(36).slice(2)}`
+    localStorage.setItem(sessionKey, generated)
+    return generated
+  }
+
+  const headers = () => ({ 'X-Cart-Session': ensureSession(), 'X-Site': storefront.resolvedSite })
+
+  const notify = (message: string, type: 'success' | 'error' = 'success') => {
+    notice.value = { message, type }
+    if (noticeTimer) clearTimeout(noticeTimer)
+    noticeTimer = setTimeout(() => { notice.value = null }, 3200)
+  }
+
+  const hydrateWishlist = () => {
+    if (!import.meta.client || wishlistHydrated.value) return
+    try {
+      const saved = JSON.parse(localStorage.getItem(wishlistKey) || '[]')
+      wishlist.value = Array.isArray(saved) ? saved.filter(Number.isInteger) : []
+    } catch {
+      wishlist.value = []
+    }
+    wishlistHydrated.value = true
+  }
+
+  const initialize = async () => {
+    hydrateWishlist()
+    if (!import.meta.client || initialized.value) return
+    try {
+      const response = await $fetch<ApiEnvelope<StoreCart>>('/api/cart', { headers: headers() })
+      cart.value = response.data
+      initialized.value = true
+    } catch {
+      notify('Não foi possível carregar sua cesta.', 'error')
+    }
+  }
+
+  const setBusy = (productId: number, busy: boolean) => {
+    busyProducts.value = busy
+      ? Array.from(new Set([...busyProducts.value, productId]))
+      : busyProducts.value.filter(id => id !== productId)
+  }
+
+  const addToCart = async (product: StoreProduct, quantity = 1) => {
+    if (product.stock < 1 || busyProducts.value.includes(product.id)) return
+    setBusy(product.id, true)
+    try {
+      const response = await $fetch<ApiEnvelope<StoreCart>>('/api/cart/items', {
+        method: 'POST',
+        headers: headers(),
+        body: { product_id: product.id, quantity },
+      })
+      cart.value = response.data
+      initialized.value = true
+      cartOpen.value = true
+      notify(`${product.name} foi adicionado à cesta.`)
+    } catch (error: any) {
+      notify(error?.data?.message || 'Não foi possível adicionar o produto.', 'error')
+    } finally {
+      setBusy(product.id, false)
+    }
+  }
+
+  const updateQuantity = async (productId: number, quantity: number) => {
+    if (quantity < 1) return removeFromCart(productId)
+    setBusy(productId, true)
+    try {
+      const response = await $fetch<ApiEnvelope<StoreCart>>('/api/cart/items', {
+        method: 'PUT', headers: headers(), body: { product_id: productId, quantity },
+      })
+      cart.value = response.data
+    } catch (error: any) {
+      notify(error?.data?.message || 'Não foi possível atualizar a quantidade.', 'error')
+    } finally {
+      setBusy(productId, false)
+    }
+  }
+
+  const removeFromCart = async (productId: number) => {
+    setBusy(productId, true)
+    try {
+      const response = await $fetch<ApiEnvelope<StoreCart>>(`/api/cart/items/${productId}`, {
+        method: 'DELETE', headers: headers(),
+      })
+      cart.value = response.data
+      notify('Produto removido da cesta.')
+    } catch (error: any) {
+      notify(error?.data?.message || 'Não foi possível remover o produto.', 'error')
+    } finally {
+      setBusy(productId, false)
+    }
+  }
+
+  const toggleWishlist = (product: StoreProduct) => {
+    hydrateWishlist()
+    const active = wishlist.value.includes(product.id)
+    wishlist.value = active ? wishlist.value.filter(id => id !== product.id) : [...wishlist.value, product.id]
+    if (import.meta.client) localStorage.setItem(wishlistKey, JSON.stringify(wishlist.value))
+    notify(active ? `${product.name} saiu da sua lista.` : `${product.name} foi salvo na sua lista.`)
+  }
+
+  const isWishlisted = (productId: number) => wishlist.value.includes(productId)
+  const cartProducts = computed(() => cart.value.items.map(item => ({
+    item,
+    product: storefront.products.find(product => product.id === item.product_id),
+  })))
+  const wishlistProducts = computed(() => storefront.products.filter(product => wishlist.value.includes(product.id)))
+
+  return {
+    cart,
+    cartProducts,
+    wishlist,
+    wishlistProducts,
+    cartOpen,
+    wishlistOpen,
+    busyProducts,
+    notice,
+    initialize,
+    addToCart,
+    updateQuantity,
+    removeFromCart,
+    toggleWishlist,
+    isWishlisted,
+  }
+}

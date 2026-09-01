@@ -75,6 +75,23 @@ API, no tipo `StoreTheme`, no editor e no componente que a consome.
 5. Preserve responsividade, estados vazios, imagens ausentes e rotas internas.
 6. Não duplique checkout nem área do cliente.
 
+### Componentes e comércio compartilhados
+
+- DaisyUI é a base funcional dos temas: prefira `btn`, `badge`, `card`, `input`,
+  `select`, `checkbox`, `toggle`, `tabs`, `drawer`, `modal`, `alert`, `join`,
+  `loading` e `toast` antes de criar um componente equivalente.
+- A identidade visual continua no CSS do tema. As classes DaisyUI resolvem
+  comportamento, estados e acessibilidade; cores, tipografia, ritmo e composição
+  devem consumir `site.theme` e manter a personalidade do segmento.
+- Carrinho e lista de desejos devem usar `useStorefrontCommerce`. Não crie estado
+  paralelo dentro de cards, cabeçalhos ou páginas.
+- Todo botão de compra deve funcionar como visitante. O composable cria e envia
+  `X-Cart-Session`; login não é pré-condição para montar o pedido.
+- Cards e página de produto devem refletir os mesmos estados de carregamento,
+  estoque, carrinho e favorito.
+- Filtros devem derivar dos produtos e categorias recebidos da API, manter estado
+  visível, oferecer limpeza e informar a quantidade de resultados.
+
 ## Configurações do tema Farmácia
 
 As configurações genéricas são logo, favicon, imagem do hero, três cores, fonte,
@@ -106,6 +123,10 @@ lapidar o layout sem migrar dados do lojista.
 - Valores opcionais devem ter fallback no storefront.
 - Temas do mesmo segmento podem compartilhar componentes, mas cada `folder` deve
   corresponder a um renderer conhecido.
+- A tipografia de leitura não deve ficar abaixo de `1rem` em desktop; metadados
+  podem ser menores desde que preservem contraste e legibilidade.
+- O tema Farmácia usa serifas na leitura e nos títulos como assinatura editorial,
+  combinadas a controles diretos e densidade moderada de varejo.
 
 ## Validação antes de entregar
 
@@ -127,7 +148,9 @@ tooling ser concluída, o build de produção é sua validação frontend reprod
 
 Também valide manualmente: catálogo correto para dois segmentos distintos,
 ativação sem recarregar o painel, persistência após atualizar a página, hero com e
-sem imagem, páginas internas, checkout e área do cliente.
+sem imagem, páginas internas, checkout e área do cliente. Para temas com comércio,
+valide ainda: dois visitantes com sessões distintas, adicionar sem login, alterar
+quantidade, remover item, persistir favoritos, limpar filtros e navegar com busca.
 
 ## Definição de pronto
 
