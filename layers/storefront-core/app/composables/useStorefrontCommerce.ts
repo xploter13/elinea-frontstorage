@@ -2,12 +2,14 @@ import type { ApiEnvelope } from '#shared/types/storefront'
 import type { StoreCart } from '#shared/types/commerce'
 import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
 
-const emptyCart = (): StoreCart => ({
+function emptyCart(): StoreCart {
+  return {
   id: 0,
   coupon_code: null,
   items: [],
   totals: { items_count: 0, items_total: 0, discount: 0, shipping: 0, total: 0 },
-})
+  }
+}
 
 export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
   const namespace = storefront.site.slug

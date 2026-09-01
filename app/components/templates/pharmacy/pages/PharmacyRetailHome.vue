@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { ArrowRight, Baby, BadgePercent, Bandage, Cross, HeartPulse, PackageCheck, ShieldCheck, ShoppingBag, Sparkles, Truck } from '@lucide/vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
+import { useStorefrontCatalog } from '~~/layers/storefront-core/app/composables/useStorefrontCatalog'
 import PharmacyRetailProductCard from '../components/PharmacyRetailProductCard.vue'
+import { pharmacyBranding } from '../pharmacy.config'
 
 const props = defineProps<{ storefront: StorefrontPayload }>()
 const { activeCategories, productImage, usePlaceholder } = useStorefrontCatalog(props.storefront)
 const featured = computed(() => (props.storefront.products.some(item => item.is_featured) ? props.storefront.products.filter(item => item.is_featured) : props.storefront.products).slice(0, 10))
 const heroProduct = computed(() => featured.value.find(item => productImage(item)) || featured.value[0])
 const secondaryProduct = computed(() => featured.value.find(item => item.id !== heroProduct.value?.id && productImage(item)))
-const theme = computed(() => props.storefront.site.theme)
+const theme = computed(() => pharmacyBranding)
 const categoryIcons = [HeartPulse, Sparkles, Baby, Bandage, Cross, BadgePercent]
 const activeOfferFilter = ref<number | 'all'>('all')
 const offerFilters = computed(() => {

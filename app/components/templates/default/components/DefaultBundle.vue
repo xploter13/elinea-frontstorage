@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ArrowRight, Plus } from '@lucide/vue'
 import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
+import { useStorefrontCatalog } from '~~/layers/storefront-core/app/composables/useStorefrontCatalog'
 const props = defineProps<{ products: StoreProduct[], storefront: StorefrontPayload }>()
-const { money, productImage, usePlaceholder } = useDefaultCatalog(props.storefront)
+const { money, productImage, usePlaceholder } = useStorefrontCatalog(props.storefront)
 </script>
 <template>
   <section class="mx-auto max-w-[1440px] px-4 py-24 sm:px-7 lg:px-10 lg:py-32">

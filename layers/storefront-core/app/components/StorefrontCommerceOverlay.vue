@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { Heart, Minus, Plus, ShoppingBag, Trash2, X } from '@lucide/vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
+import { useStorefrontCatalog } from '../composables/useStorefrontCatalog'
+import { useStorefrontCommerce } from '../composables/useStorefrontCommerce'
 
 const props = defineProps<{ storefront: StorefrontPayload }>()
-const { money, productImage } = useStorefrontCatalog(props.storefront)
+const {
+  money,
+  productImage,
+} = useStorefrontCatalog(props.storefront)
 const {
   cart, cartProducts, wishlistProducts, cartOpen, wishlistOpen, busyProducts, notice,
   initialize, addToCart, updateQuantity, removeFromCart, toggleWishlist,

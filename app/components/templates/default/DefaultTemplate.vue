@@ -8,6 +8,7 @@ import DefaultCategories from './pages/DefaultCategories.vue'
 import DefaultHome from './pages/DefaultHome.vue'
 import DefaultProductDetail from './pages/DefaultProductDetail.vue'
 import DefaultProducts from './pages/DefaultProducts.vue'
+import { defaultBranding } from './default.config'
 
 const props = defineProps<{ storefront: StorefrontPayload, page: StorefrontPage }>()
 const product = computed(() => {
@@ -19,7 +20,7 @@ const category = computed(() => {
   return page.kind === 'category' ? props.storefront.categories.find(item => item.slug === page.slug) : undefined
 })
 const categoryProducts = computed(() => category.value ? props.storefront.products.filter(item => item.categories?.some(value => value.id === category.value?.id)) : [])
-const theme = computed(() => props.storefront.site.theme)
+const theme = computed(() => defaultBranding)
 const themeStyle = computed(() => {
   const values = theme.value
 

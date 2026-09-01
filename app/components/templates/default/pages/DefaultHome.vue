@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { ArrowRight, Clock3, PackageCheck, ShieldCheck, Sparkles } from '@lucide/vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
+import { useStorefrontCatalog } from '~~/layers/storefront-core/app/composables/useStorefrontCatalog'
 import DefaultProductCard from '../components/DefaultProductCard.vue'
 import DefaultSectionHeading from '../components/DefaultSectionHeading.vue'
 import DefaultBundle from '../components/DefaultBundle.vue'
 import DefaultManifesto from '../components/DefaultManifesto.vue'
 import DefaultSocialGallery from '../components/DefaultSocialGallery.vue'
 import DefaultTestimonials from '../components/DefaultTestimonials.vue'
+import { defaultBranding } from '../default.config'
 const props = defineProps<{ storefront: StorefrontPayload }>()
-const { productImage, usePlaceholder, activeCategories } = useDefaultCatalog(props.storefront)
+const { productImage, usePlaceholder, activeCategories } = useStorefrontCatalog(props.storefront)
 const featured = computed(() => (props.storefront.products.filter(product => product.is_featured).length ? props.storefront.products.filter(product => product.is_featured) : props.storefront.products).slice(0, 8))
 const heroProduct = computed(() => featured.value.find(product => productImage(product)) || featured.value[0])
-const theme = computed(() => props.storefront.site.theme)
+const theme = computed(() => defaultBranding)
 const heroTitle = computed(() => theme.value?.hero_title || 'Sua rotina pede coisa boa.')
 const heroSubtitle = computed(() => theme.value?.hero_subtitle || 'Produtos selecionados, compra simples e tudo o que faz sentido para o seu dia.')
 const heroImage = computed(() => theme.value?.hero_image_url || (heroProduct.value ? productImage(heroProduct.value) : null))

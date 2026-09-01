@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Headphones, LockKeyhole, PackageCheck, RefreshCcw, Tags, Truck } from '@lucide/vue'
-import type { StoreTheme } from '#shared/types/storefront'
-defineProps<{ storeName: string, theme?: StoreTheme | null }>()
+import type { StorefrontTemplateBranding } from '#shared/types/template'
+defineProps<{ storeName: string, theme: StorefrontTemplateBranding }>()
 </script>
 
 <template>

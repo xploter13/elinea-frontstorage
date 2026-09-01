@@ -30,5 +30,12 @@ Variáveis:
 
 Crie o componente em `app/components/templates` e registre-o em
 `app/pages/[...path].vue` usando exatamente o valor de `template.folder` (ou slug).
-O componente recebe uma prop `storefront` com site, produtos, categorias, analytics
-e configuração de newsletter.
+Novos renderers são criados a partir do blueprint Farmácia:
+
+```bash
+npm run template:create -- farmacia-sao-lucas
+```
+
+O registro é automático pela pasta em `app/components/templates`. Cada renderer
+recebe `storefront` com site, produtos, categorias e integrações públicas; identidade
+visual, textos institucionais e assets ficam no código versionado do cliente.

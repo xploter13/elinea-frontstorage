@@ -7,8 +7,9 @@ ou a estratégia de templates mudar.
 ## Objetivo
 
 O `elinea-frontstorage` é uma aplicação Nuxt responsável por renderizar a loja
-correta com base no domínio da requisição. Conteúdo, configurações e identificação
-do template são fornecidos pela API `elinea-api`.
+correta com base no domínio da requisição. Dados comerciais e identificação técnica
+do template são fornecidos pela API `elinea-api`; a identidade visual fica no código
+versionado do renderer.
 
 O projeto não mantém uma lista própria de lojas. A API é a fonte da verdade para
 tenants, produtos, categorias, integrações e demais dados do ecommerce.
@@ -125,16 +126,17 @@ O endpoint `/site` inclui:
 ```
 
 O frontend procura primeiro `template.folder` e depois `template.slug` no registro
-de componentes em `app/pages/[...path].vue`. Caso não exista renderer registrado,
+automático em `app/templates/template-registry.ts`. Caso não exista renderer registrado,
 `TemplateFallback.vue` mostra uma página de diagnóstico sem impedir a validação do
 tenant e dos dados.
 
 Um template futuro deve:
 
-1. ser criado em `app/components/templates`;
+1. ser criado com `npm run template:create -- chave-do-cliente`;
 2. receber uma prop `storefront` do tipo `StorefrontPayload`;
-3. ser registrado no `templateRegistry` com a mesma chave de `template.folder`;
-4. usar somente dados do tenant presentes no payload, sem valores fixos de loja.
+3. manter o componente `*Template.vue` diretamente na pasta do renderer;
+4. usar o layer `storefront-core` para catálogo, carrinho e wishlist;
+5. manter branding, conteúdo institucional e assets no arquivo estático do cliente.
 
 Renderers disponíveis no MVP:
 
@@ -262,11 +264,11 @@ Invoke-WebRequest `
 Essa tolerância parcial permite que uma integração secundária indisponível não
 derrube toda a storefront, mas mantém a resolução da loja como requisito obrigatório.
 
-## Temas gerenciáveis
+## Templates por cliente
 
-- O contrato completo para criação, registro, ativação e personalização de temas
-  está em `docs/themes.md`.
-- `folder` seleciona o renderer e `segment` controla a compatibilidade comercial.
+- O contrato para criar renderers está em `docs/themes.md`.
+- `folder` é somente a chave técnica que seleciona código presente no build.
+- Não existem marketplace, ativação, licença, preset ou customização visual via API.
+- O layer `layers/storefront-core` concentra comportamento reutilizável.
 - Checkout e área do cliente permanecem compartilhados pelo roteador central.
-- O tema `pharmacy` possui conteúdo principal gerenciável pelo painel, além de
-  cores, tipografia e imagens.
+- Farmácia é o blueprint inicial para novos clientes.

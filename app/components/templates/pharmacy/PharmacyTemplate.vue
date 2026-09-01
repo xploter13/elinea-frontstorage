@@ -3,12 +3,13 @@ import type { StorefrontPayload } from '#shared/types/storefront'
 import type { StorefrontPage } from '~/utils/storefront-page'
 import PharmacyFooter from './components/PharmacyRetailFooter.vue'
 import PharmacyHeader from './components/PharmacyRetailHeader.vue'
-import PharmacyCommerceOverlay from './components/PharmacyCommerceOverlay.vue'
+import StorefrontCommerceOverlay from '~~/layers/storefront-core/app/components/StorefrontCommerceOverlay.vue'
 import PharmacyCart from './pages/PharmacyCart.vue'
 import PharmacyCategories from './pages/PharmacyCategories.vue'
 import PharmacyHome from './pages/PharmacyRetailHome.vue'
 import PharmacyProductDetail from './pages/PharmacyProductDetail.vue'
 import PharmacyProducts from './pages/PharmacyProducts.vue'
+import { pharmacyBranding } from './pharmacy.config'
 
 const props = defineProps<{ storefront: StorefrontPayload, page: StorefrontPage }>()
 const product = computed(() => {
@@ -20,7 +21,7 @@ const category = computed(() => {
   return page.kind === 'category' ? props.storefront.categories.find(item => item.slug === page.slug) : undefined
 })
 const categoryProducts = computed(() => category.value ? props.storefront.products.filter(item => item.categories.some(value => value.id === category.value?.id)) : [])
-const theme = computed(() => props.storefront.site.theme)
+const theme = computed(() => pharmacyBranding)
 const themeStyle = computed(() => ({
   '--ph-primary': theme.value?.primary_color || '#177c68',
   '--ph-ink': theme.value?.secondary_color || '#153b36',
@@ -49,7 +50,7 @@ const themeStyle = computed(() => ({
     <PharmacyProductDetail v-else-if="page.kind === 'product' && product" :product="product" :storefront="storefront" />
     <PharmacyCart v-else-if="page.kind === 'cart'" :storefront="storefront" />
     <PharmacyFooter :store-name="storefront.site.name" :theme="theme" />
-    <PharmacyCommerceOverlay :storefront="storefront" />
+    <StorefrontCommerceOverlay :storefront="storefront" />
   </div>
 </template>
 
