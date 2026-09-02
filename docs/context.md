@@ -34,6 +34,11 @@ O header `X-Site` pode receber o domínio ou o slug da loja. Em produção, o va
 normal é o domínio acessado pelo usuário. Em `localhost`, o fallback é definido por
 `NUXT_STOREFRONT_SITE`.
 
+Esse valor resolve somente o `Site`. Ele não força o renderer. A seleção visual
+continua vindo do template retornado pela API: `sites.template_id -> templates.folder`
+(com fallback para `template.slug`). Exemplo: `NUXT_STOREFRONT_SITE=default` pode
+renderizar `pharmacy` quando o site `default` estiver associado ao template Farmácia.
+
 ## API
 
 URL padrão de desenvolvimento:
@@ -142,8 +147,7 @@ Renderers disponíveis no MVP:
 
 | Chave (`folder` ou `slug`) | Componente | Direção visual |
 |---|---|---|
-| `default` | `TemplateDefault.vue` | Varejo vibrante, denso e orientado a ofertas |
-| `editorial` | `TemplateEditorial.vue` | Varejo minimalista, assimétrico e orientado a curadoria |
+| `base` ou `default` | `base/BaseTemplate.vue` | Base replicável para novos clientes |
 | `pharmacy` ou `farmacia` | `pharmacy/PharmacyTemplate.vue` | Farmácia flat, acessível e orientada a rotinas de cuidado |
 
 ### Páginas compartilhadas
@@ -164,9 +168,10 @@ O checkout compartilhado já consome o carrinho real, inclusive o carrinho
 visitante. Endereço, frete, pagamento e autenticação continuam sendo etapas
 compartilhadas e devem evoluir fora dos renderers de tema.
 
-Para testar o segundo renderer, associe na API um template com `folder` ou `slug`
-igual a `editorial`. A seleção continua baseada exclusivamente no template retornado
-por `GET /site`; o frontend não vincula um renderer diretamente a um domínio.
+Para testar outro renderer, associe na API um template com `folder` ou `slug`
+igual à pasta desejada. A seleção continua baseada exclusivamente no template
+retornado por `GET /site`; o frontend não vincula um renderer diretamente a um
+domínio ou ao valor de `NUXT_STOREFRONT_SITE`.
 
 ## Variáveis de ambiente
 
@@ -207,6 +212,10 @@ o valor no `.env` e reinicie o servidor Nuxt:
 ```env
 NUXT_STOREFRONT_SITE=supermercado-estrela
 ```
+
+Para testar outro layout no mesmo tenant, não basta alterar `NUXT_STOREFRONT_SITE`.
+Atualize na API o template associado ao `Site` resolvido, garantindo que
+`templates.folder` corresponda a um renderer existente em `app/components/templates`.
 
 ## Teste local usando os domínios das lojas
 
@@ -268,7 +277,8 @@ derrube toda a storefront, mas mantém a resolução da loja como requisito obri
 
 - O contrato para criar renderers está em `docs/themes.md`.
 - `folder` é somente a chave técnica que seleciona código presente no build.
+- `NUXT_STOREFRONT_SITE` e `X-Site` selecionam a loja, não o template visual.
 - Não existem marketplace, ativação, licença, preset ou customização visual via API.
 - O layer `layers/storefront-core` concentra comportamento reutilizável.
 - Checkout e área do cliente permanecem compartilhados pelo roteador central.
-- Farmácia é o blueprint inicial para novos clientes.
+- `base` é o blueprint inicial para novos clientes.

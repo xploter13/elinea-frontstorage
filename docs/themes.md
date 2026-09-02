@@ -10,6 +10,11 @@ marketplace e sem customização visual via API.
 - `elinea-admin`: administra operação, catálogo e pedidos; não edita o layout.
 - `elinea-gestao`: administra a plataforma; não mantém catálogo comercial de temas.
 
+Domínio, header `X-Site` e `NUXT_STOREFRONT_SITE` escolhem apenas qual `Site` será
+carregado. O renderer visual vem da API pela cadeia `Site -> Template -> folder`.
+Portanto, alterar `NUXT_STOREFRONT_SITE` troca o tenant local, mas não substitui o
+template associado a esse tenant.
+
 O cadastro de um cliente não gera código durante uma requisição HTTP. Ele inicia o
 fluxo de implantação, no qual um renderer é criado, personalizado, versionado,
 validado e publicado.
@@ -30,7 +35,7 @@ Templates devem consumir essas capacidades e não criar estados paralelos.
 
 ## Criando um template
 
-Use Farmácia como blueprint:
+Use o template base como blueprint:
 
 ```bash
 npm run template:create -- farmacia-sao-lucas
