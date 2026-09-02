@@ -1,14 +1,5 @@
 export interface ApiEnvelope<T> { data: T }
 
-export interface StoreTemplate {
-  id: number
-  name: string
-  slug: string
-  folder: string
-  segment: string
-  preview_image: string | null
-}
-
 export interface StoreSite {
   id: number
   name: string
@@ -20,7 +11,6 @@ export interface StoreSite {
   billing_status: string | null
   billing_ends_at: string | null
   trial_ends_at: string | null
-  template: StoreTemplate | null
 }
 
 export interface StoreCategory {
@@ -75,6 +65,5 @@ export interface StorefrontPayload {
   categories: StoreCategory[]
   analytics: AnalyticsConfiguration | null
   newsletter: { enabled: boolean } | null
-  resolvedSite: string
   warnings: string[]
 }

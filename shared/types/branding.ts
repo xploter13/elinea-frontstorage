@@ -1,4 +1,4 @@
-export interface StorefrontTemplateBranding {
+export interface StorefrontBranding {
   logo_url: string | null
   favicon_url: string | null
   hero_image_url: string | null

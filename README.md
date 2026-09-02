@@ -1,46 +1,45 @@
-# Elinea Frontstorage
+# Elínea Storefront
 
-Storefront Nuxt multi-tenant da Elinea. O domínio da requisição identifica a loja e o
-campo `site.template.folder` (com fallback para `template.slug`) seleciona o renderer.
-Essas duas etapas são independentes: `NUXT_STOREFRONT_SITE=default` apenas resolve
-o `Site` de slug/domínio `default`; se esse site estiver associado ao template
-`pharmacy`, o renderer carregado será `pharmacy`.
+Aplicação Nuxt 4 SSR destinada a uma única loja Elínea. Cada cliente possui uma
+cópia e um deploy independentes deste repositório.
 
-## MVP
+## Configuração
 
-O endpoint interno `GET /api/storefront` consulta a API Laravel com o header `X-Site`
-e agrega os dados públicos necessários:
-
-- `GET /api/v1/site`
-- `GET /api/v1/products`
-- `GET /api/v1/categories`
-- `GET /api/v1/integrations/analytics`
-- `GET /api/v1/newsletter-popup`
-
-Em `localhost`, `NUXT_STOREFRONT_SITE` define o tenant usado no desenvolvimento,
-não o layout. Para testar outro layout, altere na API a associação
-`sites.template_id -> templates.folder` do site resolvido.
-
-```bash
-copy .env.example .env
+```powershell
+Copy-Item .env.example .env
+yarn install
 npm run dev
 ```
 
-Variáveis:
+Configure:
 
-- `NUXT_API_BASE`: URL base da API, apenas no servidor Nuxt.
-- `NUXT_STOREFRONT_SITE`: domínio ou slug usado como fallback local.
-
-## Adicionando templates
-
-Crie o componente em `app/components/templates` e registre-o em
-`app/pages/[...path].vue` usando exatamente o valor de `template.folder` (ou slug).
-Novos renderers são criados a partir do template base:
-
-```bash
-npm run template:create -- farmacia-sao-lucas
+```env
+NUXT_API_BASE=http://elinea-api.test/api/v1
+NUXT_ELINEA_STORE_KEY=
+NUXT_ELINEA_STORE_SECRET=
+NUXT_ELINEA_STORE_SITE=default
 ```
 
-O registro é automático pela pasta em `app/components/templates`. Cada renderer
-recebe `storefront` com site, produtos, categorias e integrações públicas; identidade
-visual, textos institucionais e assets ficam no código versionado do cliente.
+- `NUXT_ELINEA_STORE_KEY` e `NUXT_ELINEA_STORE_SECRET` identificam a loja no
+  servidor Nitro. O segredo nunca é exposto no bundle client-side.
+- `NUXT_ELINEA_STORE_SITE` é somente um fallback para desenvolvimento local sem
+  credenciais e não é aceito em produção.
+
+O storefront renderiza `app/components/storefront/BaseTemplate.vue` diretamente.
+Não existem registry, seleção dinâmica ou cópia de templates dentro da aplicação.
+Branding específico fica em `app/components/storefront/base.config.ts` e nos assets;
+engenharia compartilhada pertence a `@elinea/sdk` e `@elinea/ui`.
+
+## SSR
+
+`app/pages/[...path].vue` executa `await useFetch('/api/storefront')` durante SSR.
+A rota Nitro cria o SDK com o runtime config privado, consulta a API e entrega HTML
+completo antes da hidratação.
+
+```powershell
+npm run typecheck
+npm run build
+```
+
+Consulte `docs/context.md` e `docs/package-architecture.md` para os limites de cada
+camada.

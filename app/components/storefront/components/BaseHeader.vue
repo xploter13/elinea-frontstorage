@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ChevronDown, Heart, MapPin, Menu, Percent, Search, ShoppingCart, UserRound, X } from '@lucide/vue'
 import type { StoreCategory, StorefrontPayload } from '#shared/types/storefront'
-import type { StorefrontTemplateBranding } from '#shared/types/template'
+import type { StorefrontBranding } from '#shared/types/branding'
 import { useStorefrontCommerce } from '~~/layers/storefront-core/app/composables/useStorefrontCommerce'
 
-const props = defineProps<{ storefront: StorefrontPayload, storeName: string, logoUrl?: string | null, categories: StoreCategory[], theme: StorefrontTemplateBranding }>()
+const props = defineProps<{ storefront: StorefrontPayload, storeName: string, logoUrl?: string | null, categories: StoreCategory[], theme: StorefrontBranding }>()
 const menuOpen = ref(false)
 const searchOpen = ref(false)
 const search = ref('')

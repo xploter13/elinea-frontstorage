@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Mail, Phone } from '@lucide/vue'
-import type { StorefrontTemplateBranding } from '#shared/types/template'
-defineProps<{ storeName: string, theme: StorefrontTemplateBranding }>()
+import type { StorefrontBranding } from '#shared/types/branding'
+defineProps<{ storeName: string, theme: StorefrontBranding }>()
 
 const footerGroups = [
   { title: 'Atendimento', links: ['Minha conta', 'Meus pedidos', 'Trocas e devoluções', 'Entrega', 'Reembolso', 'Privacidade', 'Termos e condições'] },

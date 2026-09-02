@@ -6,8 +6,6 @@ function warningFor(resource: string, reason: unknown): string {
 }
 
 export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
-  const config = useRuntimeConfig(event)
-  const resolvedSite = resolveStorefrontSite(event, config.storefrontSite)
   const elinea = createServerElineaClient(event)
   let site: StoreSite
 
@@ -19,7 +17,7 @@ export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
     throw createError({
       statusCode: notFound ? 404 : 502,
       statusMessage: notFound ? 'Loja não encontrada' : 'API da loja indisponível',
-      message: notFound ? `Nenhuma loja foi encontrada para ${resolvedSite}.` : 'Não foi possível consultar a API da Elinea.',
+      message: notFound ? 'A loja configurada neste storefront não foi encontrada.' : 'Não foi possível consultar a API da Elinea.',
     })
   }
 
@@ -41,7 +39,6 @@ export default defineEventHandler(async (event): Promise<StorefrontPayload> => {
     categories: categoriesResult.status === 'fulfilled' ? categoriesResult.value.data.map(toLegacyCategory) : [],
     analytics: analyticsResult.status === 'fulfilled' ? toLegacyAnalytics(analyticsResult.value) : null,
     newsletter: newsletterResult.status === 'fulfilled' ? newsletterResult.value : null,
-    resolvedSite,
     warnings,
   }
 })

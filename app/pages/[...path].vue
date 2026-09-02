@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import type { StorefrontPayload } from '#shared/types/storefront'
-import TemplateFallback from '~/components/templates/TemplateFallback.vue'
+import BaseTemplate from '~/components/storefront/BaseTemplate.vue'
 import SharedCheckout from '~~/layers/storefront-core/app/components/SharedCheckout.vue'
 import SharedCustomerArea from '~~/layers/storefront-core/app/components/SharedCustomerArea.vue'
-import { resolveStorefrontTemplate } from '~/templates/template-registry'
 import { pageTitle, resolveStorefrontPage } from '~/utils/storefront-page'
 
-const requestHeaders = import.meta.server ? useRequestHeaders(['host', 'x-forwarded-host', 'x-site']) : undefined
+const requestHeaders = import.meta.server ? useRequestHeaders(['host', 'x-forwarded-host']) : undefined
 const { data: storefront, error } = await useFetch<StorefrontPayload>('/api/storefront', { headers: requestHeaders, key: 'storefront' })
 
 if (error.value || !storefront.value) {
@@ -20,11 +19,10 @@ const payload = storefront.value
 
 const route = useRoute()
 const page = computed(() => resolveStorefrontPage(route.path))
-const templateKey = payload.site.template?.folder || payload.site.template?.slug || 'fallback'
 const renderer = computed(() => {
   if (page.value.kind === 'checkout') return SharedCheckout
   if (page.value.kind === 'account') return SharedCustomerArea
-  return resolveStorefrontTemplate(templateKey) || TemplateFallback
+  return BaseTemplate
 })
 
 const requestedPage = page.value
@@ -42,5 +40,5 @@ useSeoMeta({
 </script>
 
 <template>
-  <component :is="renderer" :storefront="storefront" :page="page" />
+  <component :is="renderer" :storefront="payload" :page="page" />
 </template>

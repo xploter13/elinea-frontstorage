@@ -29,7 +29,7 @@ O SDK é TypeScript puro e não contém imports de Vue ou Nuxt.
 
 ### `@elinea/ui`
 
-- tokens derivados do template `base` aprovado;
+- tokens derivados do storefront base aprovado;
 - provider/adapters de comércio sem dependência de Nuxt ou Pinia;
 - primitives de botão, input, badge, modal, drawer e estado vazio;
 - produto, preço, quantidade, add-to-cart, grid, página de produto e categorias;
@@ -41,10 +41,10 @@ outros clientes entra por CSS variables e composição.
 
 ### Storefront
 
-- resolução de host e leitura do `runtimeConfig` no Nitro;
+- leitura do `runtimeConfig` privado no Nitro;
 - rotas internas que protegem credenciais e sessões do browser;
-- roteamento Nuxt, SEO, seleção de renderer e conteúdo do cliente;
-- branding, assets e composição visual exclusiva dos renderers.
+- roteamento Nuxt, SEO e conteúdo do cliente;
+- branding, assets e composição visual exclusiva da loja.
 
 ## Estado transitório
 
@@ -53,9 +53,9 @@ mas são consumidos por dependências `file:` enquanto não há publicação em 
 Cada pacote já possui versão e build próprios.
 
 O layer `layers/storefront-core` ainda mantém estado Nuxt de carrinho/wishlist e
-adapta os contratos visuais antigos. `app/components/templates/base` e `pharmacy`
-continuam ativos para preservar o HTML/CSS aprovado. Eles devem migrar componente a
-componente para `@elinea/ui`, sempre com screenshots comparativos desktop/mobile.
+adapta os contratos visuais antigos. A única composição ativa está em
+`app/components/storefront` e preserva o HTML/CSS aprovado. Ela deve migrar componente
+a componente para `@elinea/ui`, sempre com screenshots comparativos desktop/mobile.
 
 Checkout e área do cliente atuais são protótipos visuais, não fluxos operacionais
 completos. A extração para o UI deve ocorrer junto da implementação real dos
@@ -64,9 +64,9 @@ contratos SDK, evitando cristalizar telas demonstrativas como API pública.
 ## Próximas fases
 
 1. Publicar `@elinea/sdk` e `@elinea/ui` e substituir dependências `file:` por ranges.
-2. Configurar credenciais nos sites existentes e retirar o fallback `X-Site`.
+2. Configurar credenciais nos sites existentes e retirar o fallback local por slug.
 3. Migrar `BaseProductCard`, grids e produto com comparação visual automatizada.
-4. Migrar header, footer, categorias e overlays mantendo slots específicos do cliente.
+4. Migrar header, footer, categorias e overlays mantendo slots específicos da loja.
 5. Implementar checkout/customer reais e então extrair suas estruturas para o UI.
 6. Remover contratos snake_case e o layer `storefront-core` após o último consumidor.
 

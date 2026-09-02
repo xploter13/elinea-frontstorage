@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   runtimeConfig: {
     apiBase: 'http://elinea-api.test/api/v1',
-    storefrontSite: 'default',
+    elineaStoreSite: 'default',
     elineaStoreKey: '',
     elineaStoreSecret: '',
   },

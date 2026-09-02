@@ -1,6 +1,6 @@
-import type { StorefrontTemplateBranding } from '#shared/types/template'
+import type { StorefrontBranding } from '#shared/types/branding'
 
-export const baseBranding: StorefrontTemplateBranding = {
+export const baseBranding: StorefrontBranding = {
   logo_url: null,
   favicon_url: null,
   hero_image_url: null,
