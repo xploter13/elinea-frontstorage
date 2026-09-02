@@ -23,19 +23,19 @@ const category = computed(() => {
 const categoryProducts = computed(() => category.value ? props.storefront.products.filter(item => item.categories.some(value => value.id === category.value?.id)) : [])
 const theme = computed(() => baseBranding)
 const themeStyle = computed(() => ({
-  '--sf-primary': theme.value?.primary_color || '#177c68',
-  '--sf-ink': theme.value?.secondary_color || '#153b36',
-  '--sf-accent': theme.value?.accent_color || '#ff6b5f',
+  '--sf-primary': theme.value?.primary_color || '#2563eb',
+  '--sf-ink': theme.value?.secondary_color || '#111827',
+  '--sf-accent': theme.value?.accent_color || '#ff7a1a',
   '--sf-body': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
   '--sf-display': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
-  '--color-primary': theme.value?.primary_color || '#177c68',
+  '--color-primary': theme.value?.primary_color || '#2563eb',
   '--color-primary-content': '#ffffff',
-  '--color-secondary': theme.value?.accent_color || '#ff6b5f',
+  '--color-secondary': theme.value?.accent_color || '#ff7a1a',
   '--color-secondary-content': '#ffffff',
   '--color-base-100': '#ffffff',
-  '--color-base-200': '#f3f7f5',
-  '--color-base-300': '#dfe8e5',
-  '--color-base-content': theme.value?.secondary_color || '#153b36',
+  '--color-base-200': '#f8fafc',
+  '--color-base-300': '#e5e7eb',
+  '--color-base-content': theme.value?.secondary_color || '#111827',
   '--radius-box': '0.75rem',
   '--radius-field': '0.5rem',
 }))
@@ -60,10 +60,7 @@ const themeStyle = computed(() => ({
 :global(body){margin:0}
 .base-shell{
   min-height:100dvh;
-  background:
-    radial-gradient(circle at 8% 4%, rgba(255, 214, 179, .28), transparent 28rem),
-    radial-gradient(circle at 92% 10%, rgba(31, 107, 79, .14), transparent 26rem),
-    #f7f6f1;
+  background:#fff;
   color:var(--sf-ink);
   font-family:var(--sf-body);
   font-size:16px;

@@ -5,18 +5,18 @@
 
 @theme {
   --font-sans: "Aptos", "Segoe UI", Arial, sans-serif;
-  --color-market-ink: #12372a;
-  --color-market-leaf: #1f6b4f;
-  --color-market-citrus: #dff36a;
-  --color-market-mist: #f3f5ee;
-  --color-market-line: #d9ded3;
+  --color-market-ink: #111827;
+  --color-market-leaf: #2563eb;
+  --color-market-citrus: #ff7a1a;
+  --color-market-mist: #ffffff;
+  --color-market-line: #e5e7eb;
 }
 
 @layer base {
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--color-market-mist); }
+  body { margin: 0; background: #ffffff; }
   button, a { -webkit-tap-highlight-color: transparent; }
-  :focus-visible { outline: 3px solid #1f6b4f; outline-offset: 3px; }
+  :focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

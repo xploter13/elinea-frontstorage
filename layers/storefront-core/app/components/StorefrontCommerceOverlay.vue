@@ -18,11 +18,11 @@ onMounted(initialize)
 </script>
 
 <template>
-  <div class="drawer drawer-end pointer-events-none fixed inset-0 z-[90]" :class="{ 'drawer-open pointer-events-auto': cartOpen }">
+  <div v-if="cartOpen" class="commerce-drawer drawer drawer-end drawer-open">
     <input class="drawer-toggle" type="checkbox" :checked="cartOpen" aria-label="Abrir cesta">
     <div class="drawer-side">
       <button class="drawer-overlay" aria-label="Fechar cesta" @click="cartOpen=false"></button>
-      <aside class="menu min-h-full w-[min(92vw,440px)] bg-base-100 p-0 text-base-content shadow-2xl">
+      <aside class="commerce-panel menu min-h-full w-[min(92vw,440px)] bg-base-100 p-0 text-base-content shadow-2xl">
         <header class="flex items-start justify-between border-b border-base-300 p-6">
           <div><span class="badge badge-primary badge-outline mb-2">Sua cesta</span><h2 class="m-0 text-3xl font-bold">{{ cart.totals.items_count }} {{ cart.totals.items_count === 1 ? 'item' : 'itens' }}</h2></div>
           <button class="btn btn-circle btn-ghost btn-sm" type="button" aria-label="Fechar cesta" @click="cartOpen=false"><X :size="19"/></button>
@@ -82,3 +82,8 @@ onMounted(initialize)
     <div class="alert shadow-xl" :class="notice.type === 'success' ? 'alert-success' : 'alert-error'"><span>{{ notice.message }}</span></div>
   </div>
 </template>
+
+<style scoped>
+.commerce-drawer{position:fixed;inset:0;z-index:90;display:block;pointer-events:auto}.commerce-drawer .drawer-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.commerce-drawer .drawer-side{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,1fr) min(92vw,440px);height:100%}.commerce-drawer .drawer-overlay{width:100%;height:100%;border:0;background:rgba(15,23,42,.42);cursor:pointer}.commerce-panel{display:flex;flex-direction:column;width:min(92vw,440px);min-height:100%;margin:0;background:#fff;color:#111827;box-shadow:-24px 0 70px rgba(15,23,42,.18);overflow:hidden}.commerce-panel header{flex:0 0 auto}.commerce-panel>div{min-height:0}.commerce-panel footer{flex:0 0 auto}
+@media(max-width:560px){.commerce-drawer .drawer-side{grid-template-columns:1fr}.commerce-drawer .drawer-overlay{display:none}.commerce-panel{width:100vw}}
+</style>

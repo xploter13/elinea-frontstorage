@@ -184,10 +184,10 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   margin-top: 16px;
-  border: 1px solid rgba(21, 59, 54, .1);
+  border: 1px solid #e5e7eb;
   border-radius: 0 0 14px 14px;
   background: rgba(255, 255, 255, .78);
-  box-shadow: 0 20px 54px rgba(30, 70, 62, .06);
+  box-shadow: 0 20px 54px rgba(15, 23, 42, .04);
   backdrop-filter: blur(14px)
 }
 
@@ -202,7 +202,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 }
 
 .benefit-bar>div+div {
-  border-left: 1px solid #e0e9e6
+  border-left: 1px solid #e5e7eb
 }
 
 .benefit-bar span {
@@ -226,12 +226,12 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   min-height: 560px;
   margin-top: 24px;
   overflow: hidden;
-  border: 1px solid rgba(21, 59, 54, .08);
+  border: 1px solid #e5e7eb;
   border-radius: 20px;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, .9), rgba(229, 244, 239, .88)),
-    #e5f4ef;
-  box-shadow: 0 32px 90px rgba(30, 70, 62, .12)
+    linear-gradient(115deg, rgba(255, 255, 255, .94), rgba(248, 250, 252, .9)),
+    #fff;
+  box-shadow: 0 32px 90px rgba(15, 23, 42, .07)
 }
 
 .hero-copy {
@@ -264,7 +264,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 .hero-copy p {
   max-width: 500px;
   margin: 0;
-  color: #4e6863;
+  color: #475569;
   font-size: 17px;
   line-height: 1.65
 }
@@ -278,7 +278,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   padding: 0 20px;
   border-radius: 8px;
   background: var(--sf-primary);
-  box-shadow: 0 16px 34px rgba(31, 107, 79, .22);
+  box-shadow: 0 16px 34px rgba(37, 99, 235, .16);
   color: #fff;
   font-size: 13px;
   font-weight: 900;
@@ -287,8 +287,8 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 }
 
 .hero-copy>a:hover {
-  background: #125c48;
-  box-shadow: 0 20px 40px rgba(31, 107, 79, .28);
+  background: #1d4ed8;
+  box-shadow: 0 20px 40px rgba(37, 99, 235, .2);
   transform: translateY(-2px)
 }
 
@@ -298,7 +298,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   align-items: center;
   gap: 10px;
   margin-top: 35px;
-  color: #57706b;
+  color: #64748b;
   font-size: 8px;
   font-weight: 700
 }
@@ -315,7 +315,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   min-height: 560px;
   background:
     radial-gradient(circle at 28% 22%, rgba(255, 255, 255, .92), transparent 19rem),
-    linear-gradient(135deg, #edf5fb, #dbeee8)
+    linear-gradient(135deg, #f8fafc, #eff6ff)
 }
 
 .medical-pattern {
@@ -333,7 +333,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 .hero-products img {
   position: absolute;
   object-fit: contain;
-  filter: drop-shadow(0 28px 34px rgba(48, 93, 81, .18))
+  filter: drop-shadow(0 28px 34px rgba(15, 23, 42, .14))
 }
 
 .hero-primary {
@@ -402,10 +402,10 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   justify-items: center;
   gap: 8px;
   padding: 18px 10px;
-  border: 1px solid rgba(21, 59, 54, .09);
+  border: 1px solid #e5e7eb;
   border-radius: 13px;
   background: rgba(255, 255, 255, .82);
-  box-shadow: 0 14px 34px rgba(30, 70, 62, .06);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, .04);
   color: var(--sf-primary);
   text-align: center;
   text-decoration: none;
@@ -413,8 +413,8 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 }
 
 .category-rail>a:hover {
-  border-color: #9bc9bc;
-  box-shadow: 0 20px 44px rgba(30, 70, 62, .1);
+  border-color: rgba(37, 99, 235, .28);
+  box-shadow: 0 20px 44px rgba(15, 23, 42, .08);
   transform: translateY(-3px)
 }
 
@@ -434,8 +434,8 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 
 .empty-row {
   padding: 45px;
-  border: 1px dashed #b9cec8;
-  color: #70847f;
+  border: 1px dashed #cbd5e1;
+  color: #64748b;
   text-align: center
 }
 
@@ -454,13 +454,13 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   align-items: center;
   overflow: hidden;
   padding: 28px;
-  border: 1px solid rgba(21, 59, 54, .08);
+  border: 1px solid #e5e7eb;
   border-radius: 16px;
-  box-shadow: 0 22px 54px rgba(30, 70, 62, .08)
+  box-shadow: 0 22px 54px rgba(15, 23, 42, .05)
 }
 
 .promo.mint {
-  background: #e2f3ed
+  background: #f8fafc
 }
 
 .promo.blue {
@@ -481,7 +481,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 .promo p {
   max-width: 210px;
   margin: 0;
-  color: #5f7671;
+  color: #64748b;
   font-size: 10px;
   line-height: 1.5
 }
@@ -531,7 +531,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: #657a76;
+  color: #64748b;
   font-size: 12px;
   cursor: pointer
 }
@@ -557,7 +557,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   border-radius: 16px;
   background:
     radial-gradient(circle at 10% 0, rgba(255, 255, 255, .65), transparent 12rem),
-    #e3f4ee;
+    #f8fafc;
   color: var(--sf-primary)
 }
 
@@ -570,7 +570,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 
 .offers-layout>aside p {
   margin: 0;
-  color: #607772;
+  color: #64748b;
   font-size: 10px;
   line-height: 1.55
 }
@@ -600,7 +600,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   overflow: hidden;
-  border: 1px solid rgba(21, 59, 54, .1);
+  border: 1px solid #e5e7eb;
   border-radius: 14px;
   background: rgba(255, 255, 255, .78)
 }
@@ -615,7 +615,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 }
 
 .compact-products>a+* {
-  border-left: 1px solid #e0e8e6
+  border-left: 1px solid #e5e7eb
 }
 
 .compact-products>a>span {
@@ -624,7 +624,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   height: 62px;
   flex: 0 0 auto;
   place-items: center;
-  background: #f4f8f6;
+  background: #f8fafc;
   color: var(--sf-primary)
 }
 
@@ -659,12 +659,12 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   margin-top: 78px;
   overflow: hidden;
   padding: 38px 55px;
-  border: 1px solid rgba(21, 59, 54, .08);
+  border: 1px solid #e5e7eb;
   border-radius: 18px;
   background:
     radial-gradient(circle at 86% 20%, rgba(255, 209, 164, .5), transparent 17rem),
-    #e2f3ed;
-  box-shadow: 0 26px 70px rgba(30, 70, 62, .09)
+    #f8fafc;
+  box-shadow: 0 26px 70px rgba(15, 23, 42, .06)
 }
 
 .newsletter>div:first-child span {
@@ -683,7 +683,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 
 .newsletter p {
   margin: 0;
-  color: #617873;
+  color: #64748b;
   font-size: 10px
 }
 
@@ -694,7 +694,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   grid-template-columns: 1fr auto;
   height: 50px;
   overflow: hidden;
-  border: 1px solid #c0d8d1;
+  border: 1px solid #dbe3ef;
   border-radius: 7px;
   background: #fff
 }
@@ -717,7 +717,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 .newsletter-mark {
   position: absolute;
   right: 4%;
-  color: #c6e4da;
+  color: #dbeafe;
   font-size: 180px;
   font-weight: 200
 }
@@ -758,7 +758,7 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   }
 
   .benefit-bar>div:nth-child(n+3) {
-    border-top: 1px solid #e0e9e6
+    border-top: 1px solid #e5e7eb
   }
 
   .hero {
