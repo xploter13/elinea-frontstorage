@@ -50,7 +50,7 @@ const products = computed(() => props.storefront.products.slice(0, 3))
   padding: clamp(30px, 5vw, 64px);
   border-radius: 18px;
   background:
-    linear-gradient(135deg, rgba(21, 59, 54, .96), rgba(31, 107, 79, .92)),
+    linear-gradient(135deg, rgba(15, 23, 42, .96), rgba(37, 99, 235, .82)),
     radial-gradient(circle at 80% 10%, rgba(255, 209, 164, .28), transparent 38%);
   color: #fff;
   overflow: hidden;
@@ -62,7 +62,7 @@ const products = computed(() => props.storefront.products.slice(0, 3))
 }
 
 .kicker {
-  color: #cfe7de;
+  color: #dbeafe;
   font-size: 12px;
   font-weight: 900;
   letter-spacing: .16em;

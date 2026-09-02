@@ -33,10 +33,10 @@ import { CreditCard, Headphones, RotateCcw, ShieldCheck, Truck } from '@lucide/v
   grid-template-columns: repeat(5, 1fr);
   width: min(100% - 40px, 1400px);
   margin: 34px auto 0;
-  border: 1px solid rgba(21, 59, 54, .11);
+  border: 1px solid #e5e7eb;
   border-radius: 12px;
   background: rgba(255, 255, 255, .74);
-  box-shadow: 0 24px 70px rgba(30, 70, 62, .08);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .05);
   backdrop-filter: blur(18px);
 }
 
@@ -50,7 +50,7 @@ import { CreditCard, Headphones, RotateCcw, ShieldCheck, Truck } from '@lucide/v
 }
 
 .service-ribbon > div + div {
-  border-left: 1px solid rgba(21, 59, 54, .1);
+  border-left: 1px solid #e5e7eb;
 }
 
 .service-ribbon span {
@@ -82,7 +82,7 @@ import { CreditCard, Headphones, RotateCcw, ShieldCheck, Truck } from '@lucide/v
   }
 
   .service-ribbon > div:nth-child(n+4) {
-    border-top: 1px solid rgba(21, 59, 54, .1);
+    border-top: 1px solid #e5e7eb;
   }
 }
 
@@ -94,7 +94,7 @@ import { CreditCard, Headphones, RotateCcw, ShieldCheck, Truck } from '@lucide/v
 
   .service-ribbon > div + div {
     border-left: 0;
-    border-top: 1px solid rgba(21, 59, 54, .1);
+    border-top: 1px solid #e5e7eb;
   }
 }
 </style>

@@ -4,6 +4,8 @@ Este documento é a referência de arquitetura e desenvolvimento do storefront d
 Elinea. Deve ser atualizado sempre que o contrato com a API, a resolução de tenant
 ou a estratégia de templates mudar.
 
+A auditoria e o progresso da extração estão em `docs/package-architecture.md`.
+
 ## Objetivo
 
 O `elinea-frontstorage` é uma aplicação Nuxt responsável por renderizar a loja
@@ -14,6 +16,24 @@ versionado do renderer.
 O projeto não mantém uma lista própria de lojas. A API é a fonte da verdade para
 tenants, produtos, categorias, integrações e demais dados do ecommerce.
 
+## Arquitetura de pacotes
+
+O storefront consome dois repositórios independentes:
+
+- `@elinea/sdk`: cliente TypeScript sem dependências de Vue ou Nuxt, responsável por
+  HTTP, autenticação, contratos, mapeamento de respostas e erros da Elínea API;
+- `@elinea/ui`: biblioteca Vue de componentes, comportamento de ecommerce e tokens
+  visuais reutilizáveis. Ela depende apenas dos contratos públicos do SDK.
+
+A integração com Nuxt permanece neste projeto. `server/utils/elinea.ts` lê o
+`runtimeConfig`, cria o cliente SDK no servidor e adapta temporariamente os modelos
+normalizados aos contratos visuais legados. Os composables Nuxt continuam no
+storefront até existir repetição comprovada entre lojas; não há `@elinea/nuxt`.
+
+Durante esta migração, `package.json` referencia os dois pacotes por `file:../...`.
+Esse vínculo é estritamente transitório para desenvolvimento local. Após a publicação,
+cada storefront deve instalar versões semânticas independentes pelo registry.
+
 ## Fluxo multi-tenant
 
 ```text
@@ -21,7 +41,7 @@ Requisição no domínio da loja
         ↓
 Nuxt identifica Host / X-Forwarded-Host
         ↓
-Nuxt envia o domínio no header X-Site
+Nuxt usa credenciais privadas de loja no servidor
         ↓
 API resolve o tenant e isola os dados pelo site_id
         ↓
@@ -30,9 +50,14 @@ GET /api/v1/site informa site e template
 Nuxt seleciona o renderer por template.folder ou template.slug
 ```
 
-O header `X-Site` pode receber o domínio ou o slug da loja. Em produção, o valor
-normal é o domínio acessado pelo usuário. Em `localhost`, o fallback é definido por
-`NUXT_STOREFRONT_SITE`.
+Em produção, configure `NUXT_ELINEA_STORE_KEY` e `NUXT_ELINEA_STORE_SECRET`. O
+segredo existe somente no runtime privado do Nitro e o SDK envia `X-Store-Key` e
+`X-Store-Secret` do servidor para a API. O navegador nunca escolhe `tenant_id` nem
+recebe o segredo.
+
+O header `X-Site` ainda pode receber domínio ou slug durante a transição de lojas
+sem credenciais. Em `localhost`, o fallback é `NUXT_STOREFRONT_SITE`. Esse mecanismo
+legado deve ser removido depois que todas as lojas tiverem credenciais rotacionadas.
 
 Esse valor resolve somente o `Site`. Ele não força o renderer. A seleção visual
 continua vindo do template retornado pela API: `sites.template_id -> templates.folder`
@@ -57,11 +82,12 @@ O endpoint interno `GET /api/storefront` agrega os seguintes endpoints públicos
 | `GET /integrations/analytics` | Retorna GA4 e Facebook Pixel públicos |
 | `GET /newsletter-popup` | Informa se o popup de newsletter está ativo |
 
-Todas essas chamadas enviam:
+Com credenciais configuradas, essas chamadas enviam do Nitro para a API:
 
 ```http
 Accept: application/json
-X-Site: dominio-ou-slug-da-loja
+X-Store-Key: credencial-publica-da-loja
+X-Store-Secret: credencial-privada-da-loja
 ```
 
 As respostas Laravel usam o envelope padrão:
@@ -78,7 +104,8 @@ lojas pertence a `GET /sites` e retorna um array em `data`.
 ### Carrinho visitante e lista de desejos
 
 O navegador não chama a API Laravel diretamente. As rotas internas do Nuxt em
-`/api/cart` encaminham as operações para `/api/v1/cart`, preservando `X-Site` e
+`/api/cart` usam `@elinea/sdk` para operar `/api/v1/cart`, preservando a credencial
+de loja somente no servidor e encaminhando
 `X-Cart-Session`. O identificador anônimo é criado uma única vez por loja e salvo
 no `localStorage` com a chave `elinea:cart-session:{site}`. Assim, adicionar,
 alterar quantidade e remover itens não dependem de login.
@@ -86,8 +113,8 @@ alterar quantidade e remover itens não dependem de login.
 A lista de desejos também funciona para visitantes e fica no `localStorage`,
 isolada por loja pela chave `elinea:wishlist:{site}`. Ela é deliberadamente local
 até o módulo `Customer` expor um contrato público para sincronização. O estado
-compartilhado dessas duas experiências fica em
-`app/composables/useStorefrontCommerce.ts`.
+compartilhado dessas duas experiências ainda fica no layer transitório
+`layers/storefront-core/app/composables/useStorefrontCommerce.ts`.
 
 ## Lojas conhecidas no MVP
 
@@ -186,11 +213,16 @@ Variáveis disponíveis:
 ```env
 NUXT_API_BASE=http://elinea-api.test/api/v1
 NUXT_STOREFRONT_SITE=default
+NUXT_ELINEA_STORE_KEY=
+NUXT_ELINEA_STORE_SECRET=
 ```
 
 - `NUXT_API_BASE`: endereço da API consumida pelo servidor Nuxt. Não é exposto como
   configuração pública ao navegador.
 - `NUXT_STOREFRONT_SITE`: domínio ou slug usado somente como fallback local.
+- `NUXT_ELINEA_STORE_KEY`: identificador da loja emitido pela API.
+- `NUXT_ELINEA_STORE_SECRET`: segredo privado usado somente pelo servidor Nitro.
+  Nunca use prefixo `NUXT_PUBLIC_` para essa variável.
 
 ## Teste rápido no navegador
 
@@ -277,8 +309,10 @@ derrube toda a storefront, mas mantém a resolução da loja como requisito obri
 
 - O contrato para criar renderers está em `docs/themes.md`.
 - `folder` é somente a chave técnica que seleciona código presente no build.
-- `NUXT_STOREFRONT_SITE` e `X-Site` selecionam a loja, não o template visual.
+- Credenciais de loja selecionam o tenant em produção; `NUXT_STOREFRONT_SITE` e
+  `X-Site` são fallbacks locais/legados e não selecionam o template visual.
 - Não existem marketplace, ativação, licença, preset ou customização visual via API.
-- O layer `layers/storefront-core` concentra comportamento reutilizável.
+- O layer `layers/storefront-core` contém somente a parcela transitória ainda não
+  migrada para `@elinea/ui` ou para adapters do storefront.
 - Checkout e área do cliente permanecem compartilhados pelo roteador central.
 - `base` é o blueprint inicial para novos clientes.

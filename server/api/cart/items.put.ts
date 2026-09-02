@@ -1,4 +1,5 @@
-import type { ApiEnvelope } from '#shared/types/storefront'
-import type { StoreCart } from '#shared/types/commerce'
-
-export default defineEventHandler(event => proxyStorefrontCommerce<ApiEnvelope<StoreCart>>(event, '/cart/items', 'PUT'))
+export default defineEventHandler(async (event) => {
+  const body = await readBody<{ product_id: number, quantity: number }>(event)
+  try { return { data: toLegacyCart(await createServerElineaClient(event).cart.updateItem(body.product_id, body.quantity)) } }
+  catch (error) { rethrowElineaError(error) }
+})

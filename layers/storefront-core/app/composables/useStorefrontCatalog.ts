@@ -1,7 +1,8 @@
 import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
+import { formatMoney } from '@elinea/ui'
 
 export function useStorefrontCatalog(storefront?: Pick<StorefrontPayload, 'categories'>) {
-  const money = (value: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
+  const money = (value: number) => formatMoney(value)
   const productImage = (product?: StoreProduct) => product?.image_path || product?.variations?.find(variation => variation.image_path)?.image_path || null
   const usePlaceholder = (event: Event) => {
     const image = event.currentTarget

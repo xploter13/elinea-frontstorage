@@ -4,10 +4,10 @@ import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
 
 function emptyCart(): StoreCart {
   return {
-  id: 0,
-  coupon_code: null,
-  items: [],
-  totals: { items_count: 0, items_total: 0, discount: 0, shipping: 0, total: 0 },
+    id: 0,
+    coupon_code: null,
+    items: [],
+    totals: { items_count: 0, items_total: 0, discount: 0, shipping: 0, total: 0 },
   }
 }
 
@@ -35,7 +35,7 @@ export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
     return generated
   }
 
-  const headers = () => ({ 'X-Cart-Session': ensureSession(), 'X-Site': storefront.resolvedSite })
+  const headers = () => ({ 'X-Cart-Session': ensureSession() })
 
   const notify = (message: string, type: 'success' | 'error' = 'success') => {
     notice.value = { message, type }

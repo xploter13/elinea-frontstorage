@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StorefrontPayload } from '#shared/types/storefront'
 import type { StorefrontPage } from '~/utils/storefront-page'
+import BaseCookieConsent from './components/BaseCookieConsent.vue'
 import BaseFooter from './components/BaseFooter.vue'
 import BaseHeader from './components/BaseHeader.vue'
 import StorefrontCommerceOverlay from '~~/layers/storefront-core/app/components/StorefrontCommerceOverlay.vue'
@@ -28,6 +29,12 @@ const themeStyle = computed(() => ({
   '--sf-accent': theme.value?.accent_color || '#ff7a1a',
   '--sf-body': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
   '--sf-display': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
+  '--elinea-primary': theme.value?.primary_color || '#2563eb',
+  '--elinea-secondary': theme.value?.secondary_color || '#111827',
+  '--elinea-accent': theme.value?.accent_color || '#ff7a1a',
+  '--elinea-font-body': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
+  '--elinea-font-heading': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
+  '--elinea-container-width': '1400px',
   '--color-primary': theme.value?.primary_color || '#2563eb',
   '--color-primary-content': '#ffffff',
   '--color-secondary': theme.value?.accent_color || '#ff7a1a',
@@ -51,6 +58,7 @@ const themeStyle = computed(() => ({
     <BaseProductDetail v-else-if="page.kind === 'product' && product" :product="product" :storefront="storefront" />
     <BaseCart v-else-if="page.kind === 'cart'" :storefront="storefront" />
     <BaseFooter :store-name="storefront.site.name" :theme="theme" />
+    <BaseCookieConsent />
     <StorefrontCommerceOverlay :storefront="storefront" />
   </div>
 </template>
@@ -96,9 +104,8 @@ const themeStyle = computed(() => ({
 :global(.base-shell .promo h2){font-size:23px}
 :global(.base-shell .promo p){font-size:13px}
 :global(.base-shell .promo a){font-size:12px}
-:global(.base-shell .offers-heading nav button){font-size:13px}
-:global(.base-shell .offers-layout>aside p){font-size:13px}
-:global(.base-shell .offers-layout>aside a){font-size:12px}
+:global(.base-shell .deals-heading nav button),
+:global(.base-shell .deals-heading nav a){font-size:13px}
 :global(.base-shell .retail-product .category){font-size:11px}
 :global(.base-shell .retail-product h3){font-size:16px}
 :global(.base-shell .retail-product .product-content>p){font-size:12px}

@@ -9,20 +9,18 @@ import { baseBranding } from '../base.config'
 
 const props = defineProps<{ storefront: StorefrontPayload }>()
 const { activeCategories, productImage, usePlaceholder } = useStorefrontCatalog(props.storefront)
-const featured = computed(() => (props.storefront.products.some(item => item.is_featured) ? props.storefront.products.filter(item => item.is_featured) : props.storefront.products).slice(0, 10))
+const featured = computed(() => (props.storefront.products.some(item => item.is_featured) ? props.storefront.products.filter(item => item.is_featured) : props.storefront.products).slice(0, 12))
 const heroProduct = computed(() => featured.value.find(item => productImage(item)) || featured.value[0])
 const secondaryProduct = computed(() => featured.value.find(item => item.id !== heroProduct.value?.id && productImage(item)))
 const theme = computed(() => baseBranding)
 const categoryIcons = [HeartPulse, Sparkles, Baby, Bandage, Cross, BadgePercent]
-const activeOfferFilter = ref<number | 'all'>('all')
-const offerFilters = computed(() => {
-  const map = new Map<number, { id: number, name: string }>()
-  featured.value.forEach(product => product.categories.forEach(category => map.set(category.id, category)))
-  return [...map.values()].slice(0, 3)
+const activeDealTab = ref<'best' | 'new' | 'sale'>('best')
+const saleProducts = computed(() => props.storefront.products.filter(product => product.original_price && product.original_price > product.price))
+const dealProducts = computed(() => {
+  if (activeDealTab.value === 'sale') return saleProducts.value.slice(0, 8)
+  if (activeDealTab.value === 'new') return [...props.storefront.products].reverse().slice(0, 8)
+  return featured.value.slice(0, 8)
 })
-const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
-  ? featured.value
-  : featured.value.filter(product => product.categories.some(category => category.id === activeOfferFilter.value)))
 </script>
 
 <template>
@@ -115,33 +113,20 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 
     <BaseEditorialSpotlight :storefront="storefront" />
 
-    <section class="offers page-width">
-      <div class="section-title offers-heading">
-        <h2>{{ theme?.featured_title || 'Ofertas para cuidar de você' }}</h2>
-        <nav class="tabs tabs-border" aria-label="Filtros da vitrine"><button class="tab"
-            :class="{ 'tab-active': activeOfferFilter === 'all' }" @click="activeOfferFilter = 'all'">Em
-            destaque</button><button v-for="category in offerFilters" :key="category.id" class="tab"
-            :class="{ 'tab-active': activeOfferFilter === category.id }" @click="activeOfferFilter = category.id">{{
-              category.name }}</button></nav>
-        <NuxtLink to="/produtos">Ver tudo
-          <ArrowRight :size="15" />
-        </NuxtLink>
+    <section class="deals page-width">
+      <div class="deals-heading">
+        <h2>Deals of The Day</h2>
+        <nav aria-label="Vitrines de produtos">
+          <button type="button" :class="{ active: activeDealTab === 'best' }" @click="activeDealTab = 'best'">Best Sellers</button>
+          <button type="button" :class="{ active: activeDealTab === 'new' }" @click="activeDealTab = 'new'">New Arrivals</button>
+          <button type="button" :class="{ active: activeDealTab === 'sale' }" @click="activeDealTab = 'sale'">On Sale</button>
+          <NuxtLink to="/produtos">View All</NuxtLink>
+        </nav>
       </div>
-      <div class="offers-layout">
-        <aside>
-          <BadgePercent :size="43" />
-          <h3>{{ theme?.offers_callout_title || 'Descontos que fazem bem para o bolso.' }}</h3>
-          <p>{{ theme?.offers_callout_text || 'Uma seleção especial para o seu cuidado diário.' }}</p>
-          <NuxtLink to="/produtos">Mais ofertas
-            <ArrowRight :size="15" />
-          </NuxtLink>
-        </aside>
-        <TransitionGroup v-if="visibleFeatured.length" name="product-list" tag="div" class="product-grid">
-          <BaseProductCard v-for="product in visibleFeatured" :key="product.id" :product="product"
-            :storefront="storefront" />
-        </TransitionGroup>
-        <div v-else class="empty-row">Nenhum produto nesta categoria.</div>
-      </div>
+      <TransitionGroup v-if="dealProducts.length" name="product-list" tag="div" class="product-grid deals-grid">
+        <BaseProductCard v-for="product in dealProducts" :key="product.id" :product="product" :storefront="storefront" />
+      </TransitionGroup>
+      <div v-else class="empty-row">Nenhum produto nesta seleção.</div>
     </section>
 
     <section v-if="featured.length" class="popular page-width">
@@ -512,84 +497,70 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
   color: var(--sf-accent)
 }
 
-.offers {
+.deals {
   padding-top: 72px
 }
 
-.offers-heading {
-  align-items: center
-}
-
-.offers-heading nav {
+.deals-heading {
   display: flex;
-  gap: 25px;
-  margin-left: auto
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 32px
 }
 
-.offers-heading nav button {
-  padding: 7px 0;
+.deals-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 25px;
+  font-weight: 760;
+  letter-spacing: -.025em
+}
+
+.deals-heading nav {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: 999px;
+  background: #e5e7eb
+}
+
+.deals-heading nav button,
+.deals-heading nav a {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  padding: 0 19px;
   border: 0;
-  border-bottom: 2px solid transparent;
+  border-radius: 999px;
   background: transparent;
-  color: #64748b;
+  color: #7a7f87;
   font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
   cursor: pointer
 }
 
-.offers-heading nav button.tab-active {
-  border-color: var(--sf-primary);
-  color: var(--sf-primary);
-  font-weight: 800
+.deals-heading nav button.active {
+  background: #fff;
+  color: #111827
 }
 
-.offers-layout {
-  display: grid;
-  grid-template-columns: 245px 1fr;
-  gap: 16px
-}
-
-.offers-layout>aside {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  min-height: 460px;
-  padding: 32px 26px;
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at 10% 0, rgba(255, 255, 255, .65), transparent 12rem),
-    #f8fafc;
-  color: var(--sf-primary)
-}
-
-.offers-layout>aside h3 {
-  margin: 25px 0 12px;
-  color: var(--sf-ink);
-  font-size: 21px;
-  line-height: 1.18
-}
-
-.offers-layout>aside p {
-  margin: 0;
-  color: #64748b;
-  font-size: 10px;
-  line-height: 1.55
-}
-
-.offers-layout>aside a {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: auto;
-  color: var(--sf-primary);
-  font-size: 10px;
-  font-weight: 800;
-  text-decoration: none
+.deals-heading nav a {
+  margin-left: 8px;
+  background: #f3f4f6;
+  color: #858b95
 }
 
 .product-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px
+}
+
+.deals-grid {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px 24px
 }
 
 .popular {
@@ -785,20 +756,17 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
     display: none
   }
 
-  .offers-heading nav {
-    display: none
-  }
-
-  .offers-layout {
-    grid-template-columns: 1fr
-  }
-
-  .offers-layout>aside {
+  .deals-heading nav {
     display: none
   }
 
   .product-grid {
     grid-template-columns: repeat(2, 1fr)
+  }
+
+  .deals-heading {
+    align-items: start;
+    flex-direction: column
   }
 
   .newsletter {

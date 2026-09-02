@@ -19,19 +19,24 @@ O cadastro de um cliente não gera código durante uma requisição HTTP. Ele in
 fluxo de implantação, no qual um renderer é criado, personalizado, versionado,
 validado e publicado.
 
-## Storefront Core
+## SDK, UI e camada transitória
 
-O layer `layers/storefront-core` é o SDK interno do storefront. Ele concentra:
+`@elinea/sdk` é a integração oficial e tipada com a API. `@elinea/ui` fornece
+componentes, tokens e comportamento Vue reutilizável. Ambos vivem em repositórios
+independentes e têm versionamento próprio.
+
+O layer `layers/storefront-core` é legado transitório. Ele ainda concentra:
 
 - estado e operações de carrinho visitante;
 - wishlist isolada por tenant;
 - formatação e leitura do catálogo;
 - overlay compartilhado de carrinho e favoritos.
 
-Checkout, área do cliente, resolução de domínio, proxy da API, contratos de dados,
-SEO e roteamento também permanecem fora dos templates específicos.
+Checkout e área do cliente devem migrar gradualmente para `@elinea/ui`. Resolução
+de domínio, runtimeConfig, rotas Nitro, SEO e roteamento permanecem no storefront.
 
-Templates devem consumir essas capacidades e não criar estados paralelos.
+Templates devem preferir os exports públicos de `@elinea/ui` e não criar estados
+paralelos. Nenhum código novo deve tratar o layer como SDK.
 
 ## Criando um template
 
@@ -41,7 +46,7 @@ Use o template base como blueprint:
 npm run template:create -- farmacia-sao-lucas
 ```
 
-O comando copia somente a camada visual do blueprint para
+O comando atual ainda copia a camada visual do blueprint para
 `app/components/templates/farmacia-sao-lucas` e renomeia componentes, imports e o
 arquivo de branding com a chave informada. O registro é automático: qualquer
 arquivo `app/components/templates/{folder}/*Template.vue` é descoberto por
@@ -51,7 +56,8 @@ Depois do scaffold:
 
 1. personalize composição, CSS, textos e assets do cliente;
 2. mantenha a prop `storefront: StorefrontPayload`;
-3. reutilize os composables do `storefront-core`;
+3. reutilize `@elinea/ui` e mantenha no storefront apenas adapters Nuxt e estado
+   transitório ainda não extraído;
 4. preserve páginas de catálogo, categorias, produto e carrinho;
 5. execute `npm run typecheck` e `npm run build`;
 6. cadastre ou atualize o `Template` técnico na API com `folder` igual à pasta;
