@@ -2,7 +2,9 @@
 import { ArrowRight, Baby, BadgePercent, Bandage, Cross, HeartPulse, PackageCheck, ShieldCheck, ShoppingBag, Sparkles, Truck } from '@lucide/vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
 import { useStorefrontCatalog } from '~~/layers/storefront-core/app/composables/useStorefrontCatalog'
+import BaseEditorialSpotlight from '../components/BaseEditorialSpotlight.vue'
 import BaseProductCard from '../components/BaseProductCard.vue'
+import BaseServiceRibbon from '../components/BaseServiceRibbon.vue'
 import { baseBranding } from '../base.config'
 
 const props = defineProps<{ storefront: StorefrontPayload }>()
@@ -25,23 +27,849 @@ const visibleFeatured = computed(() => activeOfferFilter.value === 'all'
 
 <template>
   <main>
-    <section class="benefit-bar page-width"><div><Truck/><span><strong>Entrega para sua região</strong><small>Consulte pelo CEP</small></span></div><div><PackageCheck/><span><strong>Acompanhe seu pedido</strong><small>Do preparo à entrega</small></span></div><div><ShieldCheck/><span><strong>Compra protegida</strong><small>Seus dados seguros</small></span></div><div><HeartPulse/><span><strong>Cuidado todos os dias</strong><small>Encontre o que precisa</small></span></div></section>
+    <section class="benefit-bar page-width">
+      <div>
+        <Truck /><span><strong>Entrega para sua região</strong><small>Consulte pelo CEP</small></span>
+      </div>
+      <div>
+        <PackageCheck /><span><strong>Acompanhe seu pedido</strong><small>Do preparo à entrega</small></span>
+      </div>
+      <div>
+        <ShieldCheck /><span><strong>Compra protegida</strong><small>Seus dados seguros</small></span>
+      </div>
+      <div>
+        <HeartPulse /><span><strong>Cuidado todos os dias</strong><small>Encontre o que precisa</small></span>
+      </div>
+    </section>
 
-    <section class="hero page-width"><div class="hero-copy"><span>{{ theme?.hero_eyebrow || 'Farmácia online' }}</span><h1>{{ theme?.hero_title || 'Cuidado perto de você.' }}</h1><p>{{ theme?.hero_subtitle || 'Medicamentos, higiene e bem-estar com entrega para a sua região.' }}</p><NuxtLink to="/produtos">{{ theme?.hero_cta_label || 'Ver ofertas' }} <ArrowRight :size="17"/></NuxtLink><div class="hero-trust"><span>Produtos selecionados</span><i></i><span>Preços justos</span><i></i><span>Compra segura</span></div></div><div class="hero-products"><div class="medical-pattern" aria-hidden="true"><b v-for="n in 10" :key="n">+</b></div><img v-if="theme?.hero_image_url" class="hero-primary" :src="theme.hero_image_url" alt="Destaque principal da loja" fetchpriority="high"><img v-else-if="heroProduct && productImage(heroProduct)" class="hero-primary" :src="productImage(heroProduct)!" :alt="heroProduct.name" fetchpriority="high" @error="usePlaceholder"><img v-if="secondaryProduct && productImage(secondaryProduct)" class="hero-secondary" :src="productImage(secondaryProduct)!" :alt="secondaryProduct.name" fetchpriority="high" @error="usePlaceholder"><span v-if="!theme?.hero_image_url && !heroProduct" class="hero-empty">+</span></div></section>
+    <section class="hero page-width">
+      <div class="hero-copy"><span>{{ theme?.hero_eyebrow || 'Farmácia online' }}</span>
+        <h1>{{ theme?.hero_title || 'Cuidado perto de você.' }}</h1>
+        <p>{{ theme?.hero_subtitle || 'Medicamentos, higiene e bem-estar com entrega para a sua região.' }}</p>
+        <NuxtLink to="/produtos">{{ theme?.hero_cta_label || 'Ver ofertas' }}
+          <ArrowRight :size="17" />
+        </NuxtLink>
+        <div class="hero-trust"><span>Produtos selecionados</span><i></i><span>Preços justos</span><i></i><span>Compra
+            segura</span></div>
+      </div>
+      <div class="hero-products">
+        <div class="medical-pattern" aria-hidden="true"><b v-for="n in 10" :key="n">+</b></div><img
+          v-if="theme?.hero_image_url" class="hero-primary" :src="theme.hero_image_url" alt="Destaque principal da loja"
+          fetchpriority="high"><img v-else-if="heroProduct && productImage(heroProduct)" class="hero-primary"
+          :src="productImage(heroProduct)!" :alt="heroProduct.name" fetchpriority="high" @error="usePlaceholder"><img
+          v-if="secondaryProduct && productImage(secondaryProduct)" class="hero-secondary"
+          :src="productImage(secondaryProduct)!" :alt="secondaryProduct.name" fetchpriority="high"
+          @error="usePlaceholder"><span v-if="!theme?.hero_image_url && !heroProduct" class="hero-empty">+</span>
+      </div>
+    </section>
 
-    <section class="categories page-width"><div class="section-title"><h2>{{ theme?.categories_title || 'Compre por necessidade' }}</h2><NuxtLink to="/categorias">Ver todas <ArrowRight :size="15"/></NuxtLink></div><div v-if="activeCategories.length" class="category-rail"><NuxtLink v-for="(category,index) in activeCategories.slice(0,8)" :key="category.id" :to="`/categoria/${category.slug}`"><component :is="categoryIcons[index % categoryIcons.length]" :size="30"/><strong>{{ category.name }}</strong><small>{{ storefront.products.filter(item => item.categories.some(value => value.id === category.id)).length }} produtos</small></NuxtLink><NuxtLink to="/produtos" class="offer-category"><BadgePercent :size="30"/><strong>Ofertas</strong><small>Economize hoje</small></NuxtLink></div><div v-else class="empty-row">As categorias estão sendo organizadas.</div></section>
+    <BaseServiceRibbon />
 
-    <section class="promo-grid page-width"><article class="promo mint"><div><h2>{{ theme?.promo_primary_title || 'Essenciais para a rotina' }}</h2><p>{{ theme?.promo_primary_text || 'Produtos que vale ter sempre por perto.' }}</p><NuxtLink to="/produtos">Ver produtos</NuxtLink></div><img v-if="heroProduct && productImage(heroProduct)" :src="productImage(heroProduct)!" :alt="heroProduct.name"></article><article class="promo blue"><div><h2>{{ theme?.promo_secondary_title || 'Cuidado simples, todos os dias' }}</h2><p>{{ theme?.promo_secondary_text || 'Encontre tudo em poucos cliques.' }}</p><NuxtLink to="/categorias">Explorar</NuxtLink></div><img v-if="secondaryProduct && productImage(secondaryProduct)" :src="productImage(secondaryProduct)!" :alt="secondaryProduct.name"></article><article class="promo peach"><div><h2>{{ theme?.promo_tertiary_title || 'Ofertas que fazem sentido' }}</h2><p>{{ theme?.promo_tertiary_text || 'Preços especiais na seleção da loja.' }}</p><NuxtLink to="/produtos">Conferir ofertas</NuxtLink></div><BadgePercent :size="72"/></article></section>
+    <section class="categories page-width">
+      <div class="section-title">
+        <h2>{{ theme?.categories_title || 'Compre por necessidade' }}</h2>
+        <NuxtLink to="/categorias">Ver todas
+          <ArrowRight :size="15" />
+        </NuxtLink>
+      </div>
+      <div v-if="activeCategories.length" class="category-rail">
+        <NuxtLink v-for="(category, index) in activeCategories.slice(0, 8)" :key="category.id"
+          :to="`/categoria/${category.slug}`">
+          <component :is="categoryIcons[index % categoryIcons.length]" :size="30" /><strong>{{ category.name
+            }}</strong><small>{{storefront.products.filter(item => item.categories.some(value => value.id ===
+              category.id)).length }} produtos</small>
+        </NuxtLink>
+        <NuxtLink to="/produtos" class="offer-category">
+          <BadgePercent :size="30" /><strong>Ofertas</strong><small>Economize hoje</small>
+        </NuxtLink>
+      </div>
+      <div v-else class="empty-row">As categorias estão sendo organizadas.</div>
+    </section>
 
-    <section class="offers page-width"><div class="section-title offers-heading"><h2>{{ theme?.featured_title || 'Ofertas para cuidar de você' }}</h2><nav class="tabs tabs-border" aria-label="Filtros da vitrine"><button class="tab" :class="{ 'tab-active': activeOfferFilter==='all' }" @click="activeOfferFilter='all'">Em destaque</button><button v-for="category in offerFilters" :key="category.id" class="tab" :class="{ 'tab-active': activeOfferFilter===category.id }" @click="activeOfferFilter=category.id">{{ category.name }}</button></nav><NuxtLink to="/produtos">Ver tudo <ArrowRight :size="15"/></NuxtLink></div><div class="offers-layout"><aside><BadgePercent :size="43"/><h3>{{ theme?.offers_callout_title || 'Descontos que fazem bem para o bolso.' }}</h3><p>{{ theme?.offers_callout_text || 'Uma seleção especial para o seu cuidado diário.' }}</p><NuxtLink to="/produtos">Mais ofertas <ArrowRight :size="15"/></NuxtLink></aside><TransitionGroup v-if="visibleFeatured.length" name="product-list" tag="div" class="product-grid"><BaseProductCard v-for="product in visibleFeatured" :key="product.id" :product="product" :storefront="storefront"/></TransitionGroup><div v-else class="empty-row">Nenhum produto nesta categoria.</div></div></section>
+    <section class="promo-grid page-width">
+      <article class="promo mint">
+        <div>
+          <h2>{{ theme?.promo_primary_title || 'Essenciais para a rotina' }}</h2>
+          <p>{{ theme?.promo_primary_text || 'Produtos que vale ter sempre por perto.' }}</p>
+          <NuxtLink to="/produtos">Ver produtos</NuxtLink>
+        </div><img v-if="heroProduct && productImage(heroProduct)" :src="productImage(heroProduct)!"
+          :alt="heroProduct.name">
+      </article>
+      <article class="promo blue">
+        <div>
+          <h2>{{ theme?.promo_secondary_title || 'Cuidado simples, todos os dias' }}</h2>
+          <p>{{ theme?.promo_secondary_text || 'Encontre tudo em poucos cliques.' }}</p>
+          <NuxtLink to="/categorias">Explorar</NuxtLink>
+        </div><img v-if="secondaryProduct && productImage(secondaryProduct)" :src="productImage(secondaryProduct)!"
+          :alt="secondaryProduct.name">
+      </article>
+      <article class="promo peach">
+        <div>
+          <h2>{{ theme?.promo_tertiary_title || 'Ofertas que fazem sentido' }}</h2>
+          <p>{{ theme?.promo_tertiary_text || 'Preços especiais na seleção da loja.' }}</p>
+          <NuxtLink to="/produtos">Conferir ofertas</NuxtLink>
+        </div>
+        <BadgePercent :size="72" />
+      </article>
+    </section>
 
-    <section v-if="featured.length" class="popular page-width"><div class="section-title"><h2>{{ theme?.popular_title || 'Mais procurados' }}</h2><NuxtLink to="/produtos">Ver todos <ArrowRight :size="15"/></NuxtLink></div><div class="compact-products"><NuxtLink v-for="product in featured.slice(0,5)" :key="product.id" :to="`/produto/${product.slug}`"><span><img v-if="productImage(product)" :src="productImage(product)!" :alt="product.name" loading="lazy"><ShoppingBag v-else :size="30"/></span><div><small>{{ product.categories[0]?.name || 'Cuidado diário' }}</small><strong>{{ product.name }}</strong></div></NuxtLink></div></section>
+    <BaseEditorialSpotlight :storefront="storefront" />
 
-    <section v-if="theme?.show_newsletter !== false" class="newsletter page-width"><div><span>{{ theme?.newsletter_eyebrow || 'Novidades da loja' }}</span><h2>{{ theme?.newsletter_title || 'Cuide da sua rotina sem sair de casa.' }}</h2><p>{{ theme?.newsletter_text || `Receba ofertas e informações úteis da ${storefront.site.name}.` }}</p></div><form @submit.prevent><label class="sr-only" for="retail-email">Seu melhor e-mail</label><input id="retail-email" type="email" placeholder="Seu melhor e-mail"><button type="submit">{{ theme?.newsletter_button_label || 'Quero receber' }}</button></form><div class="newsletter-mark">+</div></section>
+    <section class="offers page-width">
+      <div class="section-title offers-heading">
+        <h2>{{ theme?.featured_title || 'Ofertas para cuidar de você' }}</h2>
+        <nav class="tabs tabs-border" aria-label="Filtros da vitrine"><button class="tab"
+            :class="{ 'tab-active': activeOfferFilter === 'all' }" @click="activeOfferFilter = 'all'">Em
+            destaque</button><button v-for="category in offerFilters" :key="category.id" class="tab"
+            :class="{ 'tab-active': activeOfferFilter === category.id }" @click="activeOfferFilter = category.id">{{
+              category.name }}</button></nav>
+        <NuxtLink to="/produtos">Ver tudo
+          <ArrowRight :size="15" />
+        </NuxtLink>
+      </div>
+      <div class="offers-layout">
+        <aside>
+          <BadgePercent :size="43" />
+          <h3>{{ theme?.offers_callout_title || 'Descontos que fazem bem para o bolso.' }}</h3>
+          <p>{{ theme?.offers_callout_text || 'Uma seleção especial para o seu cuidado diário.' }}</p>
+          <NuxtLink to="/produtos">Mais ofertas
+            <ArrowRight :size="15" />
+          </NuxtLink>
+        </aside>
+        <TransitionGroup v-if="visibleFeatured.length" name="product-list" tag="div" class="product-grid">
+          <BaseProductCard v-for="product in visibleFeatured" :key="product.id" :product="product"
+            :storefront="storefront" />
+        </TransitionGroup>
+        <div v-else class="empty-row">Nenhum produto nesta categoria.</div>
+      </div>
+    </section>
+
+    <section v-if="featured.length" class="popular page-width">
+      <div class="section-title">
+        <h2>{{ theme?.popular_title || 'Mais procurados' }}</h2>
+        <NuxtLink to="/produtos">Ver todos
+          <ArrowRight :size="15" />
+        </NuxtLink>
+      </div>
+      <div class="compact-products">
+        <NuxtLink v-for="product in featured.slice(0, 5)" :key="product.id" :to="`/produto/${product.slug}`"><span><img
+              v-if="productImage(product)" :src="productImage(product)!" :alt="product.name" loading="lazy">
+            <ShoppingBag v-else :size="30" />
+          </span>
+          <div><small>{{ product.categories[0]?.name || 'Cuidado diário' }}</small><strong>{{ product.name }}</strong>
+          </div>
+        </NuxtLink>
+      </div>
+    </section>
+
+    <section v-if="theme?.show_newsletter !== false" class="newsletter page-width">
+      <div><span>{{ theme?.newsletter_eyebrow || 'Novidades da loja' }}</span>
+        <h2>{{ theme?.newsletter_title || 'Cuide da sua rotina sem sair de casa.' }}</h2>
+        <p>{{ theme?.newsletter_text || `Receba ofertas e informações úteis da ${storefront.site.name}.` }}</p>
+      </div>
+      <form @submit.prevent><label class="sr-only" for="retail-email">Seu melhor e-mail</label><input id="retail-email"
+          type="email" placeholder="Seu melhor e-mail"><button type="submit">{{ theme?.newsletter_button_label || 'Quero receber' }}</button></form>
+      <div class="newsletter-mark">+</div>
+    </section>
   </main>
 </template>
 
 <style scoped>
-.page-width{width:min(100% - 40px,1400px);margin-inline:auto}.benefit-bar{display:grid;grid-template-columns:repeat(4,1fr);margin-top:16px;border:1px solid #e5ecea;background:#f8fbfa}.benefit-bar>div{display:flex;align-items:center;justify-content:center;gap:11px;min-height:66px;padding:10px;color:var(--sf-primary)}.benefit-bar>div+div{border-left:1px solid #e0e9e6}.benefit-bar span{display:grid;gap:3px}.benefit-bar strong{color:var(--sf-ink);font-size:10px}.benefit-bar small{color:#758884;font-size:8px}.hero{display:grid;grid-template-columns:.92fr 1.08fr;min-height:450px;margin-top:18px;overflow:hidden;border-radius:14px;background:#e5f4ef}.hero-copy{display:flex;flex-direction:column;align-items:start;justify-content:center;padding:55px 60px}.hero-copy>span{color:var(--sf-primary);font-size:11px;font-weight:800}.hero-copy h1{max-width:650px;margin:12px 0 15px;font-family:"Nunito Sans","Segoe UI",sans-serif;font-size:clamp(42px,4.6vw,68px);font-weight:800;line-height:.98;letter-spacing:-.055em;text-wrap:balance}.hero-copy p{max-width:500px;margin:0;color:#4e6863;font-size:15px;line-height:1.6}.hero-copy>a{display:flex;height:46px;align-items:center;gap:8px;margin-top:25px;padding:0 18px;border-radius:7px;background:var(--sf-primary);color:#fff;font-size:11px;font-weight:800;text-decoration:none}.hero-trust{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:35px;color:#57706b;font-size:8px;font-weight:700}.hero-trust i{width:3px;height:3px;border-radius:50%;background:var(--sf-primary)}.hero-products{position:relative;min-height:450px;background:#eaf3fa}.medical-pattern{position:absolute;inset:25px;display:grid;grid-template-columns:repeat(5,1fr);align-items:center;justify-items:center;color:#cae0ec;font-size:45px;opacity:.55}.hero-products img{position:absolute;object-fit:contain;filter:drop-shadow(0 18px 20px rgba(48,93,81,.13))}.hero-primary{right:11%;bottom:6%;width:48%;height:78%}.hero-secondary{left:6%;bottom:3%;width:42%;height:57%}.hero-empty{display:grid;width:100%;height:100%;place-items:center;color:#d1e3ec;font-size:180px}.section-title{display:flex;align-items:end;justify-content:space-between;gap:25px;margin-bottom:20px}.section-title h2{margin:0;font-size:23px;letter-spacing:-.035em}.section-title>a{display:flex;align-items:center;gap:6px;color:var(--sf-primary);font-size:10px;font-weight:800;text-decoration:none}.categories{padding-top:34px}.category-rail{display:grid;grid-template-columns:repeat(auto-fit,minmax(115px,1fr));gap:10px}.category-rail>a{display:grid;min-height:128px;align-content:center;justify-items:center;gap:8px;padding:15px 8px;border:1px solid #dfe8e5;background:#fff;color:var(--sf-primary);text-align:center;text-decoration:none;transition:transform .2s,border-color .2s}.category-rail>a:hover{border-color:#9bc9bc;transform:translateY(-2px)}.category-rail strong{color:var(--sf-ink);font-size:10px}.category-rail small{color:#84948f;font-size:8px}.category-rail .offer-category{color:var(--sf-accent)}.empty-row{padding:45px;border:1px dashed #b9cec8;color:#70847f;text-align:center}.promo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-top:28px}.promo{position:relative;display:grid;grid-template-columns:1fr .8fr;min-height:190px;align-items:center;overflow:hidden;padding:28px;border-radius:10px}.promo.mint{background:#e2f3ed}.promo.blue{background:#e9f2fa}.promo.peach{background:#fbede7}.promo h2{max-width:240px;margin:0 0 9px;font-size:19px;line-height:1.15}.promo p{max-width:210px;margin:0;color:#5f7671;font-size:10px;line-height:1.5}.promo a{display:inline-flex;margin-top:19px;padding:9px 12px;border-radius:5px;background:var(--sf-primary);color:#fff;font-size:9px;font-weight:800;text-decoration:none}.promo img{position:absolute;right:3%;bottom:0;width:43%;height:90%;object-fit:contain}.promo>svg{justify-self:center;color:var(--sf-accent)}.offers{padding-top:58px}.offers-heading{align-items:center}.offers-heading nav{display:flex;gap:25px;margin-left:auto}.offers-heading nav button{padding:7px 0;border:0;border-bottom:2px solid transparent;background:transparent;color:#657a76;font-size:10px}.offers-heading nav button.active{border-color:var(--sf-primary);color:var(--sf-primary);font-weight:800}.offers-layout{display:grid;grid-template-columns:190px 1fr}.offers-layout>aside{display:flex;flex-direction:column;align-items:start;padding:29px 24px;background:#e3f4ee;color:var(--sf-primary)}.offers-layout>aside h3{margin:25px 0 12px;color:var(--sf-ink);font-size:21px;line-height:1.18}.offers-layout>aside p{margin:0;color:#607772;font-size:10px;line-height:1.55}.offers-layout>aside a{display:flex;align-items:center;gap:7px;margin-top:auto;color:var(--sf-primary);font-size:10px;font-weight:800;text-decoration:none}.product-grid{display:grid;grid-template-columns:repeat(4,1fr)}.popular{padding-top:58px}.compact-products{display:grid;grid-template-columns:repeat(5,1fr);border-block:1px solid #e0e8e6}.compact-products>a{display:flex;align-items:center;gap:12px;padding:14px;color:var(--sf-ink);text-decoration:none}.compact-products>a+*{border-left:1px solid #e0e8e6}.compact-products>a>span{display:grid;width:62px;height:62px;flex:0 0 auto;place-items:center;background:#f4f8f6;color:var(--sf-primary)}.compact-products img{width:100%;height:100%;object-fit:contain}.compact-products div{display:grid;gap:4px}.compact-products small{color:var(--sf-primary);font-size:8px}.compact-products strong{font-size:10px;line-height:1.35}.newsletter{position:relative;display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;gap:55px;min-height:190px;margin-top:60px;overflow:hidden;padding:38px 55px;border-radius:12px;background:#e2f3ed}.newsletter>div:first-child span{color:var(--sf-primary);font-size:9px;font-weight:800}.newsletter h2{max-width:440px;margin:6px 0;font-size:28px;line-height:1.1}.newsletter p{margin:0;color:#617873;font-size:10px}.newsletter form{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;height:50px;overflow:hidden;border:1px solid #c0d8d1;border-radius:7px;background:#fff}.newsletter input{min-width:0;padding:0 16px;border:0;outline:0}.newsletter button{padding:0 21px;border:0;background:var(--sf-primary);color:#fff;font-weight:800}.newsletter-mark{position:absolute;right:4%;color:#c6e4da;font-size:180px;font-weight:200}@media(max-width:1000px){.product-grid{grid-template-columns:repeat(3,1fr)}.promo-grid{grid-template-columns:1fr 1fr}.promo:last-child{display:none}.compact-products{grid-template-columns:repeat(3,1fr)}.compact-products>a:nth-child(n+4){display:none}}@media(max-width:760px){.page-width{width:min(100% - 24px,1400px)}.benefit-bar{grid-template-columns:1fr 1fr}.benefit-bar>div:nth-child(3){border-left:0}.benefit-bar>div:nth-child(n+3){border-top:1px solid #e0e9e6}.hero{grid-template-columns:1fr}.hero-copy{padding:42px 28px}.hero-copy h1{font-size:48px}.hero-products{min-height:330px}.promo-grid{grid-template-columns:1fr}.promo:nth-child(2){display:none}.offers-heading nav{display:none}.offers-layout{grid-template-columns:1fr}.offers-layout>aside{display:none}.product-grid{grid-template-columns:repeat(2,1fr)}.newsletter{grid-template-columns:1fr;gap:25px;padding:34px 24px}.newsletter-mark{display:none}}@media(max-width:520px){.benefit-bar>div{justify-content:start}.category-rail{display:flex;overflow:auto}.category-rail>a{min-width:120px}.promo{min-height:170px}.section-title h2{font-size:20px}.product-grid{gap:8px;background:#fff}.compact-products{grid-template-columns:1fr}.compact-products>a:nth-child(n+3){display:none}.compact-products>a+*{border-left:0}.newsletter form{grid-template-columns:1fr;height:auto}.newsletter input,.newsletter button{height:48px}}
-.product-list-enter-active,.product-list-leave-active{transition:opacity .18s,transform .18s}.product-list-enter-from,.product-list-leave-to{opacity:0;transform:translateY(8px)}
+.page-width {
+  width: min(100% - 40px, 1400px);
+  margin-inline: auto
+}
+
+.benefit-bar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 16px;
+  border: 1px solid rgba(21, 59, 54, .1);
+  border-radius: 0 0 14px 14px;
+  background: rgba(255, 255, 255, .78);
+  box-shadow: 0 20px 54px rgba(30, 70, 62, .06);
+  backdrop-filter: blur(14px)
+}
+
+.benefit-bar>div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  min-height: 66px;
+  padding: 10px;
+  color: var(--sf-primary)
+}
+
+.benefit-bar>div+div {
+  border-left: 1px solid #e0e9e6
+}
+
+.benefit-bar span {
+  display: grid;
+  gap: 3px
+}
+
+.benefit-bar strong {
+  color: var(--sf-ink);
+  font-size: 10px
+}
+
+.benefit-bar small {
+  color: #758884;
+  font-size: 8px
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  min-height: 560px;
+  margin-top: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(21, 59, 54, .08);
+  border-radius: 20px;
+  background:
+    linear-gradient(115deg, rgba(255, 255, 255, .9), rgba(229, 244, 239, .88)),
+    #e5f4ef;
+  box-shadow: 0 32px 90px rgba(30, 70, 62, .12)
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  padding: clamp(44px, 6vw, 84px)
+}
+
+.hero-copy>span {
+  color: var(--sf-primary);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase
+}
+
+.hero-copy h1 {
+  max-width: 650px;
+  margin: 14px 0 18px;
+  font-family: "Nunito Sans", "Segoe UI", sans-serif;
+  font-size: clamp(48px, 5.3vw, 82px);
+  font-weight: 900;
+  line-height: .9;
+  letter-spacing: -.05em;
+  text-wrap: balance
+}
+
+.hero-copy p {
+  max-width: 500px;
+  margin: 0;
+  color: #4e6863;
+  font-size: 17px;
+  line-height: 1.65
+}
+
+.hero-copy>a {
+  display: flex;
+  height: 46px;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+  padding: 0 20px;
+  border-radius: 8px;
+  background: var(--sf-primary);
+  box-shadow: 0 16px 34px rgba(31, 107, 79, .22);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  transition: transform .22s, box-shadow .22s, background .22s
+}
+
+.hero-copy>a:hover {
+  background: #125c48;
+  box-shadow: 0 20px 40px rgba(31, 107, 79, .28);
+  transform: translateY(-2px)
+}
+
+.hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 35px;
+  color: #57706b;
+  font-size: 8px;
+  font-weight: 700
+}
+
+.hero-trust i {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--sf-primary)
+}
+
+.hero-products {
+  position: relative;
+  min-height: 560px;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255, 255, 255, .92), transparent 19rem),
+    linear-gradient(135deg, #edf5fb, #dbeee8)
+}
+
+.medical-pattern {
+  position: absolute;
+  inset: 25px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  justify-items: center;
+  color: #cae0ec;
+  font-size: 45px;
+  opacity: .38
+}
+
+.hero-products img {
+  position: absolute;
+  object-fit: contain;
+  filter: drop-shadow(0 28px 34px rgba(48, 93, 81, .18))
+}
+
+.hero-primary {
+  right: 11%;
+  bottom: 6%;
+  width: 48%;
+  height: 78%
+}
+
+.hero-secondary {
+  left: 6%;
+  bottom: 3%;
+  width: 42%;
+  height: 57%
+}
+
+.hero-empty {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: #d1e3ec;
+  font-size: 180px
+}
+
+.section-title {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 25px;
+  margin-bottom: 20px
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: clamp(27px, 3vw, 42px);
+  line-height: 1;
+  letter-spacing: -.04em;
+  text-wrap: balance
+}
+
+.section-title>a {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--sf-primary);
+  font-size: 10px;
+  font-weight: 800;
+  text-decoration: none
+}
+
+.categories {
+  padding-top: 54px
+}
+
+.category-rail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 12px
+}
+
+.category-rail>a {
+  display: grid;
+  min-height: 148px;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 18px 10px;
+  border: 1px solid rgba(21, 59, 54, .09);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 14px 34px rgba(30, 70, 62, .06);
+  color: var(--sf-primary);
+  text-align: center;
+  text-decoration: none;
+  transition: transform .22s, border-color .22s, box-shadow .22s
+}
+
+.category-rail>a:hover {
+  border-color: #9bc9bc;
+  box-shadow: 0 20px 44px rgba(30, 70, 62, .1);
+  transform: translateY(-3px)
+}
+
+.category-rail strong {
+  color: var(--sf-ink);
+  font-size: 10px
+}
+
+.category-rail small {
+  color: #84948f;
+  font-size: 8px
+}
+
+.category-rail .offer-category {
+  color: var(--sf-accent)
+}
+
+.empty-row {
+  padding: 45px;
+  border: 1px dashed #b9cec8;
+  color: #70847f;
+  text-align: center
+}
+
+.promo-grid {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr .82fr;
+  gap: 16px;
+  padding-top: 38px
+}
+
+.promo {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr .8fr;
+  min-height: 230px;
+  align-items: center;
+  overflow: hidden;
+  padding: 28px;
+  border: 1px solid rgba(21, 59, 54, .08);
+  border-radius: 16px;
+  box-shadow: 0 22px 54px rgba(30, 70, 62, .08)
+}
+
+.promo.mint {
+  background: #e2f3ed
+}
+
+.promo.blue {
+  background: #e9f2fa
+}
+
+.promo.peach {
+  background: #fbede7
+}
+
+.promo h2 {
+  max-width: 240px;
+  margin: 0 0 9px;
+  font-size: 19px;
+  line-height: 1.15
+}
+
+.promo p {
+  max-width: 210px;
+  margin: 0;
+  color: #5f7671;
+  font-size: 10px;
+  line-height: 1.5
+}
+
+.promo a {
+  display: inline-flex;
+  margin-top: 19px;
+  padding: 9px 12px;
+  border-radius: 5px;
+  background: var(--sf-primary);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  text-decoration: none
+}
+
+.promo img {
+  position: absolute;
+  right: 3%;
+  bottom: 0;
+  width: 43%;
+  height: 90%;
+  object-fit: contain
+}
+
+.promo>svg {
+  justify-self: center;
+  color: var(--sf-accent)
+}
+
+.offers {
+  padding-top: 72px
+}
+
+.offers-heading {
+  align-items: center
+}
+
+.offers-heading nav {
+  display: flex;
+  gap: 25px;
+  margin-left: auto
+}
+
+.offers-heading nav button {
+  padding: 7px 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #657a76;
+  font-size: 12px;
+  cursor: pointer
+}
+
+.offers-heading nav button.tab-active {
+  border-color: var(--sf-primary);
+  color: var(--sf-primary);
+  font-weight: 800
+}
+
+.offers-layout {
+  display: grid;
+  grid-template-columns: 245px 1fr;
+  gap: 16px
+}
+
+.offers-layout>aside {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  min-height: 460px;
+  padding: 32px 26px;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 10% 0, rgba(255, 255, 255, .65), transparent 12rem),
+    #e3f4ee;
+  color: var(--sf-primary)
+}
+
+.offers-layout>aside h3 {
+  margin: 25px 0 12px;
+  color: var(--sf-ink);
+  font-size: 21px;
+  line-height: 1.18
+}
+
+.offers-layout>aside p {
+  margin: 0;
+  color: #607772;
+  font-size: 10px;
+  line-height: 1.55
+}
+
+.offers-layout>aside a {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  color: var(--sf-primary);
+  font-size: 10px;
+  font-weight: 800;
+  text-decoration: none
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px
+}
+
+.popular {
+  padding-top: 58px
+}
+
+.compact-products {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(21, 59, 54, .1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .78)
+}
+
+.compact-products>a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  color: var(--sf-ink);
+  text-decoration: none
+}
+
+.compact-products>a+* {
+  border-left: 1px solid #e0e8e6
+}
+
+.compact-products>a>span {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  flex: 0 0 auto;
+  place-items: center;
+  background: #f4f8f6;
+  color: var(--sf-primary)
+}
+
+.compact-products img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain
+}
+
+.compact-products div {
+  display: grid;
+  gap: 4px
+}
+
+.compact-products small {
+  color: var(--sf-primary);
+  font-size: 8px
+}
+
+.compact-products strong {
+  font-size: 10px;
+  line-height: 1.35
+}
+
+.newsletter {
+  position: relative;
+  display: grid;
+  grid-template-columns: .85fr 1.15fr;
+  align-items: center;
+  gap: 55px;
+  min-height: 230px;
+  margin-top: 78px;
+  overflow: hidden;
+  padding: 38px 55px;
+  border: 1px solid rgba(21, 59, 54, .08);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 86% 20%, rgba(255, 209, 164, .5), transparent 17rem),
+    #e2f3ed;
+  box-shadow: 0 26px 70px rgba(30, 70, 62, .09)
+}
+
+.newsletter>div:first-child span {
+  color: var(--sf-primary);
+  font-size: 9px;
+  font-weight: 800
+}
+
+.newsletter h2 {
+  max-width: 440px;
+  margin: 6px 0;
+  font-size: clamp(32px, 4vw, 52px);
+  line-height: 1;
+  letter-spacing: -.04em
+}
+
+.newsletter p {
+  margin: 0;
+  color: #617873;
+  font-size: 10px
+}
+
+.newsletter form {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  height: 50px;
+  overflow: hidden;
+  border: 1px solid #c0d8d1;
+  border-radius: 7px;
+  background: #fff
+}
+
+.newsletter input {
+  min-width: 0;
+  padding: 0 16px;
+  border: 0;
+  outline: 0
+}
+
+.newsletter button {
+  padding: 0 21px;
+  border: 0;
+  background: var(--sf-primary);
+  color: #fff;
+  font-weight: 800
+}
+
+.newsletter-mark {
+  position: absolute;
+  right: 4%;
+  color: #c6e4da;
+  font-size: 180px;
+  font-weight: 200
+}
+
+@media(max-width:1000px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr)
+  }
+
+  .promo-grid {
+    grid-template-columns: 1fr 1fr
+  }
+
+  .promo:last-child {
+    display: none
+  }
+
+  .compact-products {
+    grid-template-columns: repeat(3, 1fr)
+  }
+
+  .compact-products>a:nth-child(n+4) {
+    display: none
+  }
+}
+
+@media(max-width:760px) {
+  .page-width {
+    width: min(100% - 24px, 1400px)
+  }
+
+  .benefit-bar {
+    grid-template-columns: 1fr 1fr
+  }
+
+  .benefit-bar>div:nth-child(3) {
+    border-left: 0
+  }
+
+  .benefit-bar>div:nth-child(n+3) {
+    border-top: 1px solid #e0e9e6
+  }
+
+  .hero {
+    grid-template-columns: 1fr
+  }
+
+  .hero-copy {
+    padding: 42px 28px
+  }
+
+  .hero-copy h1 {
+    font-size: 48px
+  }
+
+  .hero-products {
+    min-height: 330px
+  }
+
+  .promo-grid {
+    grid-template-columns: 1fr
+  }
+
+  .promo:nth-child(2) {
+    display: none
+  }
+
+  .offers-heading nav {
+    display: none
+  }
+
+  .offers-layout {
+    grid-template-columns: 1fr
+  }
+
+  .offers-layout>aside {
+    display: none
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr)
+  }
+
+  .newsletter {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 34px 24px
+  }
+
+  .newsletter-mark {
+    display: none
+  }
+}
+
+@media(max-width:520px) {
+  .benefit-bar>div {
+    justify-content: start
+  }
+
+  .category-rail {
+    display: flex;
+    overflow: auto
+  }
+
+  .category-rail>a {
+    min-width: 120px
+  }
+
+  .promo {
+    min-height: 170px
+  }
+
+  .section-title h2 {
+    font-size: 20px
+  }
+
+  .product-grid {
+    gap: 8px;
+    background: #fff
+  }
+
+  .compact-products {
+    grid-template-columns: 1fr
+  }
+
+  .compact-products>a:nth-child(n+3) {
+    display: none
+  }
+
+  .compact-products>a+* {
+    border-left: 0
+  }
+
+  .newsletter form {
+    grid-template-columns: 1fr;
+    height: auto
+  }
+
+  .newsletter input,
+  .newsletter button {
+    height: 48px
+  }
+}
+
+.product-list-enter-active,
+.product-list-leave-active {
+  transition: opacity .18s, transform .18s
+}
+
+.product-list-enter-from,
+.product-list-leave-to {
+  opacity: 0;
+  transform: translateY(8px)
+}
 </style>

@@ -26,7 +26,8 @@ const themeStyle = computed(() => ({
   '--sf-primary': theme.value?.primary_color || '#177c68',
   '--sf-ink': theme.value?.secondary_color || '#153b36',
   '--sf-accent': theme.value?.accent_color || '#ff6b5f',
-  '--sf-body': `"${theme.value?.font_family || 'Georgia'}", Georgia, Cambria, "Times New Roman", serif`,
+  '--sf-body': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
+  '--sf-display': `"${theme.value?.font_family || 'Aptos'}", "Segoe UI", Arial, sans-serif`,
   '--color-primary': theme.value?.primary_color || '#177c68',
   '--color-primary-content': '#ffffff',
   '--color-secondary': theme.value?.accent_color || '#ff6b5f',
@@ -59,7 +60,10 @@ const themeStyle = computed(() => ({
 :global(body){margin:0}
 .base-shell{
   min-height:100dvh;
-  background:#f8faf7;
+  background:
+    radial-gradient(circle at 8% 4%, rgba(255, 214, 179, .28), transparent 28rem),
+    radial-gradient(circle at 92% 10%, rgba(31, 107, 79, .14), transparent 26rem),
+    #f7f6f1;
   color:var(--sf-ink);
   font-family:var(--sf-body);
   font-size:16px;
@@ -72,7 +76,7 @@ const themeStyle = computed(() => ({
 :global(.base-shell h2),
 :global(.base-shell h3),
 :global(.base-shell h4),
-:global(.base-shell .brand strong){font-family:var(--sf-body)!important}
+:global(.base-shell .brand strong){font-family:var(--sf-display)!important}
 :global(.base-shell p){font-size:max(0.9375rem,15px)}
 :global(.base-shell .utility){font-size:12px}
 :global(.base-shell .category-select),

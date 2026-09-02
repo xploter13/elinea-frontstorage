@@ -7,7 +7,7 @@ export const baseBranding: StorefrontTemplateBranding = {
   primary_color: '#177c68',
   secondary_color: '#153b36',
   accent_color: '#ff6b5f',
-  font_family: 'Georgia',
+  font_family: 'Aptos',
   hero_title: 'Cuidado perto de você.',
   hero_subtitle: 'Medicamentos, higiene e bem-estar com entrega para a sua região.',
   featured_title: 'Ofertas para cuidar de você',
