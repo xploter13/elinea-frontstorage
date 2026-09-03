@@ -2,7 +2,7 @@
 import { BadgePercent, ChevronRight, Grid2X2, Grid3X3, LayoutGrid, PackageCheck, Search, SlidersHorizontal, Sparkles, Star, X } from '@lucide/vue'
 import type { StoreProduct, StorefrontPayload } from '#shared/types/storefront'
 import { useStorefrontCatalog } from '~~/layers/storefront-core/app/composables/useStorefrontCatalog'
-import BaseProductCard from '../components/BaseProductCard.vue'
+import BaseProductCard from './BaseProductCard.vue'
 const props = defineProps<{ products: StoreProduct[], storefront: StorefrontPayload, title?: string, description?: string }>()
 const route = useRoute()
 const router = useRouter()

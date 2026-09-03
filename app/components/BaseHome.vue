@@ -2,10 +2,10 @@
 import { ArrowRight, Baby, BadgePercent, Bandage, Cross, HeartPulse, PackageCheck, ShieldCheck, ShoppingBag, Sparkles, Truck } from '@lucide/vue'
 import type { StorefrontPayload } from '#shared/types/storefront'
 import { useStorefrontCatalog } from '~~/layers/storefront-core/app/composables/useStorefrontCatalog'
-import BaseEditorialSpotlight from '../components/BaseEditorialSpotlight.vue'
-import BaseProductCard from '../components/BaseProductCard.vue'
-import BaseServiceRibbon from '../components/BaseServiceRibbon.vue'
-import { baseBranding } from '../base.config'
+import BaseEditorialSpotlight from './BaseEditorialSpotlight.vue'
+import BaseProductCard from './BaseProductCard.vue'
+import BaseServiceRibbon from './BaseServiceRibbon.vue'
+import { baseBranding } from './base.config'
 
 const props = defineProps<{ storefront: StorefrontPayload }>()
 const { activeCategories, productImage, usePlaceholder } = useStorefrontCatalog(props.storefront)

@@ -25,9 +25,9 @@ NUXT_ELINEA_STORE_SITE=default
 - `NUXT_ELINEA_STORE_SITE` é somente um fallback para desenvolvimento local sem
   credenciais e não é aceito em produção.
 
-O storefront renderiza `app/components/storefront/BaseTemplate.vue` diretamente.
+O storefront renderiza `app/components/BaseTemplate.vue` diretamente.
 Não existem registry, seleção dinâmica ou cópia de templates dentro da aplicação.
-Branding específico fica em `app/components/storefront/base.config.ts` e nos assets;
+Branding específico fica em `app/components/base.config.ts` e nos assets;
 engenharia compartilhada pertence a `@elinea/sdk` e `@elinea/ui`.
 
 ## SSR

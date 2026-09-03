@@ -5,10 +5,10 @@ Não crie renderers por tenant dentro deste projeto.
 
 ## Onde personalizar
 
-- `app/components/storefront/base.config.ts`: textos, cores e tipografia;
+- `app/components/base.config.ts`: textos, cores e tipografia;
 - `app/assets`: estilos e assets processados pelo build;
 - `public`: arquivos públicos estáticos;
-- `app/components/storefront`: composição exclusiva da loja.
+- `app/components`: composição exclusiva da loja.
 
 O design atual é o baseline aprovado e também orienta os defaults de `@elinea/ui`.
 Antes de criar um componente local, verifique se props, slots, variantes ou tokens no

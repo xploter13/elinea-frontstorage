@@ -36,11 +36,9 @@ app/
 ├── assets/
 ├── components/
 │   ├── shared/
-│   └── storefront/
-│       ├── components/
-│       ├── pages/
-│       ├── BaseTemplate.vue
-│       └── base.config.ts
+│   ├── BaseTemplate.vue
+│   ├── Base*.vue
+│   └── base.config.ts
 ├── pages/
 └── utils/
 server/
@@ -78,7 +76,7 @@ contratos snake_case antigos até a migração completa para `@elinea/ui`.
 ## Branding
 
 A aparência inicial segue o antigo template base aprovado. Cores, tipografia e
-conteúdo padrão estão em `app/components/storefront/base.config.ts`; imagens ficam em
+conteúdo padrão estão em `app/components/base.config.ts`; imagens ficam em
 `app/assets` ou `public`. Estruturas reutilizáveis devem evoluir em `@elinea/ui`.
 
 ## Validação

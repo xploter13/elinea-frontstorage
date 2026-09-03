@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import type { StorefrontPayload } from '#shared/types/storefront'
 import type { StorefrontPage } from '~/utils/storefront-page'
-import BaseCookieConsent from './components/BaseCookieConsent.vue'
-import BaseFooter from './components/BaseFooter.vue'
-import BaseHeader from './components/BaseHeader.vue'
+import BaseCookieConsent from './BaseCookieConsent.vue'
+import BaseFooter from './BaseFooter.vue'
+import BaseHeader from './BaseHeader.vue'
 import StorefrontCommerceOverlay from '~~/layers/storefront-core/app/components/StorefrontCommerceOverlay.vue'
-import BaseCart from './pages/BaseCart.vue'
-import BaseCategories from './pages/BaseCategories.vue'
-import BaseHome from './pages/BaseHome.vue'
-import BaseProductDetail from './pages/BaseProductDetail.vue'
-import BaseProducts from './pages/BaseProducts.vue'
+import BaseCart from './BaseCart.vue'
+import BaseCategories from './BaseCategories.vue'
+import BaseHome from './BaseHome.vue'
+import BaseProductDetail from './BaseProductDetail.vue'
+import BaseProducts from './BaseProducts.vue'
 import { baseBranding } from './base.config'
 
 const props = defineProps<{ storefront: StorefrontPayload, page: StorefrontPage }>()

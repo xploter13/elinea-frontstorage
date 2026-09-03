@@ -54,7 +54,7 @@ Cada pacote já possui versão e build próprios.
 
 O layer `layers/storefront-core` ainda mantém estado Nuxt de carrinho/wishlist e
 adapta os contratos visuais antigos. A única composição ativa está em
-`app/components/storefront` e preserva o HTML/CSS aprovado. Ela deve migrar componente
+`app/components` e preserva o HTML/CSS aprovado. Ela deve migrar componente
 a componente para `@elinea/ui`, sempre com screenshots comparativos desktop/mobile.
 
 Checkout e área do cliente atuais são protótipos visuais, não fluxos operacionais
