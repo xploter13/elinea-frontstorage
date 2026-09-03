@@ -15,7 +15,7 @@ export function createServerElineaClient(event: H3Event) {
   if (!hasStoreCredentials && !import.meta.dev) {
     throw createError({ statusCode: 500, statusMessage: 'Loja não configurada', message: 'Configure NUXT_ELINEA_STORE_KEY e NUXT_ELINEA_STORE_SECRET.' })
   }
-  const authorization = getRequestHeader(event, 'authorization')?.replace(/^Bearer\s+/i, '').trim()
+  const authorization = getRequestHeader(event, 'authorization')?.replace(/^Bearer\s+/i, '').trim() || getCookie(event, 'elinea_customer_token')
   const cartSession = getRequestHeader(event, 'x-cart-session')?.trim()
 
   return createElineaClient({
