@@ -32,9 +32,9 @@ engenharia compartilhada pertence a `@elinea/sdk` e `@elinea/ui`.
 
 ## SSR
 
-`app/pages/[...path].vue` executa `await useFetch('/api/storefront')` durante SSR.
-A rota Nitro cria o SDK com o runtime config privado, consulta a API e entrega HTML
-completo antes da hidratação.
+As páginas em `app/pages/` usam `useStorefrontPage`, que executa `useFetch('/api/storefront')`
+durante SSR. A rota Nitro cria o SDK com o runtime config privado, consulta a API e
+entrega HTML completo antes da hidratação.
 
 ```powershell
 npm run typecheck

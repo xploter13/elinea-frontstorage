@@ -87,7 +87,7 @@ watch(priceCeiling, value => { priceLimit.value = value }, { immediate: true })
     <div class="shop-layout">
       <aside class="filter-sidebar" :class="{ open: filtersOpen }" aria-label="Filtros do catálogo">
         <div class="filter-head">
-          <strong><SlidersHorizontal :size="17" /> Filtrar e refinar</strong>
+          <strong><SlidersHorizontal :size="17" /> Filtrar</strong>
           <button type="button" aria-label="Fechar filtros" @click="filtersOpen = false"><X :size="18" /></button>
         </div>
 
