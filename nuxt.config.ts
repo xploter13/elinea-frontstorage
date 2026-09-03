@@ -10,7 +10,10 @@ export default defineNuxtConfig({
     elineaStoreSite: 'default',
     elineaStoreKey: '',
     elineaStoreSecret: '',
-    customerAppUrl: 'http://127.0.0.1:3101',
+    customerAppUrl,
+    public: {
+      customerAppUrl,
+    },
   },
   css: ['~/assets/css/main.css'],
   app: {
@@ -24,8 +27,6 @@ export default defineNuxtConfig({
   },
   vite: { plugins: [tailwindcss()] },
   routeRules: {
-    '/conta': { proxy: `${customerAppUrl}/conta` },
-    '/conta/**': { proxy: `${customerAppUrl}/conta/**` },
     '/carrinho': { proxy: `${customerAppUrl}/carrinho` },
     '/checkout': { proxy: `${customerAppUrl}/checkout` },
   },

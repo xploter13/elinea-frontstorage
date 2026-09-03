@@ -128,6 +128,14 @@ export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
     }
   }
 
+  const clearCartSession = () => {
+    cart.value = emptyCart()
+    initialized.value = true
+    cartOpen.value = false
+    if (import.meta.client) localStorage.removeItem(sessionKey)
+    sessionCookie.value = null
+  }
+
   const toggleWishlist = (product: StoreProduct) => {
     hydrateWishlist()
     const active = wishlist.value.includes(product.id)
@@ -156,6 +164,7 @@ export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
     addToCart,
     updateQuantity,
     removeFromCart,
+    clearCartSession,
     toggleWishlist,
     isWishlisted,
   }
