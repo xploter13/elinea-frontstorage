@@ -41,5 +41,19 @@ npm run typecheck
 npm run build
 ```
 
+## Área do cliente separada
+
+As rotas `/conta`, `/carrinho` e `/checkout` são encaminhadas pelo Nitro para o
+projeto `C:\htdocs\elinea-customer`. Em desenvolvimento, mantenha esse app
+rodando na porta `3101`. Em produção, configure `NUXT_CUSTOMER_APP_URL` com a
+URL interna do serviço do customer app antes do build do storefront. As rotas
+`/api/*` continuam no host principal, permitindo que autenticação e carrinho
+compartilhem o mesmo cookie e a mesma sessão.
+
+A sessão de visitante do carrinho usa o cookie `elinea_cart_session`, permitindo
+que o carrinho seja preservado ao encaminhar o usuário para o app customer em
+outra porta ou serviço. O `localStorage` antigo permanece apenas como fallback de
+migração.
+
 Consulte `docs/context.md` e `docs/package-architecture.md` para os limites de cada
 camada.

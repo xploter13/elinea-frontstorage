@@ -16,7 +16,7 @@ export function createServerElineaClient(event: H3Event) {
     throw createError({ statusCode: 500, statusMessage: 'Loja não configurada', message: 'Configure NUXT_ELINEA_STORE_KEY e NUXT_ELINEA_STORE_SECRET.' })
   }
   const authorization = getRequestHeader(event, 'authorization')?.replace(/^Bearer\s+/i, '').trim() || getCookie(event, 'elinea_customer_token')
-  const cartSession = getRequestHeader(event, 'x-cart-session')?.trim()
+  const cartSession = getRequestHeader(event, 'x-cart-session')?.trim() || getCookie(event, 'elinea_cart_session')
 
   return createElineaClient({
     baseUrl: config.apiBase,
@@ -30,6 +30,11 @@ export function rethrowElineaError(error: unknown): never {
   if (!(error instanceof ElineaError)) throw error
   const statusCode = error instanceof NotFoundError ? 404 : error instanceof ValidationError ? 422 : error instanceof AuthenticationError ? (error.status || 401) : (error.status || 502)
   throw createError({ statusCode, statusMessage: error.message, message: error.message, data: error.details })
+}
+
+export function persistCartSession(event: H3Event) {
+  const session = getRequestHeader(event, 'x-cart-session')?.trim()
+  if (session) setCookie(event, 'elinea_cart_session', session, { sameSite: 'lax', secure: !import.meta.dev, path: '/', maxAge: 60 * 60 * 24 * 30 })
 }
 
 export const toLegacyCategory = (category: Category): StoreCategory => ({ id: category.id, parent_id: category.parentId, name: category.name, slug: category.slug, description: category.description, priority: category.priority, is_active: category.isActive })

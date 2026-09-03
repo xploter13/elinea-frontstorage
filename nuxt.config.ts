@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
+const customerAppUrl = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.NUXT_CUSTOMER_APP_URL || 'http://127.0.0.1:3101'
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -9,6 +10,7 @@ export default defineNuxtConfig({
     elineaStoreSite: 'default',
     elineaStoreKey: '',
     elineaStoreSecret: '',
+    customerAppUrl: 'http://127.0.0.1:3101',
   },
   css: ['~/assets/css/main.css'],
   app: {
@@ -21,5 +23,11 @@ export default defineNuxtConfig({
     },
   },
   vite: { plugins: [tailwindcss()] },
+  routeRules: {
+    '/conta': { proxy: `${customerAppUrl}/conta` },
+    '/conta/**': { proxy: `${customerAppUrl}/conta/**` },
+    '/carrinho': { proxy: `${customerAppUrl}/carrinho` },
+    '/checkout': { proxy: `${customerAppUrl}/checkout` },
+  },
   typescript: { strict: true, typeCheck: true },
 })

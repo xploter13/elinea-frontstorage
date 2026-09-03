@@ -26,12 +26,12 @@ onBeforeUnmount(() => {
 
 <template>
   <Transition name="cart-drawer">
-    <div v-if="cartOpen" class="commerce-drawer" role="dialog" aria-modal="true" aria-label="Sua cesta">
-      <button class="drawer-overlay" aria-label="Fechar cesta" @click="cartOpen=false"></button>
+    <div v-if="cartOpen" class="commerce-drawer" role="dialog" aria-modal="true" aria-label="Seu carrinho">
+      <button class="drawer-overlay" aria-label="Fechar carrinho" @click="cartOpen=false"></button>
       <aside class="commerce-panel">
         <header class="cart-header">
-          <div class="cart-title"><ShoppingBag :size="20"/><div><strong>Sua cesta</strong><span>{{ cart.totals.items_count }} {{ cart.totals.items_count === 1 ? 'item' : 'itens' }}</span></div></div>
-          <button class="close-cart" type="button" aria-label="Fechar cesta" @click="cartOpen=false"><X :size="19"/></button>
+          <div class="cart-title"><ShoppingBag :size="20"/><div><strong>Seu carrinho</strong><span>{{ cart.totals.items_count }} {{ cart.totals.items_count === 1 ? 'item' : 'itens' }}</span></div></div>
+          <button class="close-cart" type="button" aria-label="Fechar carrinho" @click="cartOpen=false"><X :size="19"/></button>
         </header>
 
         <div v-if="cartProducts.length" class="cart-items">
@@ -50,13 +50,13 @@ onBeforeUnmount(() => {
         </div>
 
         <div v-else class="cart-empty">
-          <div><span><ShoppingBag :size="31"/></span><h3>Sua cesta está vazia.</h3><p>Adicione produtos sem precisar criar uma conta.</p><button type="button" @click="cartOpen=false">Continuar comprando</button></div>
+          <div><span><ShoppingBag :size="31"/></span><h3>Seu carrinho está vazio.</h3><p>Adicione produtos sem precisar criar uma conta.</p><button type="button" @click="cartOpen=false">Continuar comprando</button></div>
         </div>
 
         <footer v-if="cartProducts.length" class="cart-footer">
           <div class="cart-subtotal"><span>Subtotal</span><strong>{{ money(cart.totals.items_total) }}</strong></div>
           <NuxtLink to="/checkout" class="checkout-button" @click="cartOpen=false">Finalizar compra</NuxtLink>
-          <NuxtLink to="/carrinho" class="view-cart" @click="cartOpen=false">Ver cesta completa <ArrowRight :size="14"/></NuxtLink>
+          <NuxtLink to="/carrinho" class="view-cart" @click="cartOpen=false">Ver carrinho completo <ArrowRight :size="14"/></NuxtLink>
           <p>Frete e descontos calculados no checkout.</p>
         </footer>
       </aside>

@@ -25,12 +25,18 @@ export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
 
   const sessionKey = `elinea:cart-session:${namespace}`
   const wishlistKey = `elinea:wishlist:${namespace}`
+  const sessionCookie = useCookie<string | null>('elinea_cart_session', { sameSite: 'lax', maxAge: 60 * 60 * 24 * 30 })
 
   const ensureSession = () => {
-    if (!import.meta.client) return ''
-    const current = localStorage.getItem(sessionKey)
-    if (current) return current
+    if (!import.meta.client) return sessionCookie.value || ''
+    const current = sessionCookie.value || localStorage.getItem(sessionKey)
+    if (current) {
+      sessionCookie.value = current
+      localStorage.setItem(sessionKey, current)
+      return current
+    }
     const generated = globalThis.crypto?.randomUUID?.() || `guest-${Date.now()}-${Math.random().toString(36).slice(2)}`
+    sessionCookie.value = generated
     localStorage.setItem(sessionKey, generated)
     return generated
   }
@@ -62,7 +68,7 @@ export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
       cart.value = response.data
       initialized.value = true
     } catch {
-      notify('Não foi possível carregar sua cesta.', 'error')
+      notify('Não foi possível carregar seu carrinho.', 'error')
     }
   }
 
@@ -84,7 +90,7 @@ export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
       cart.value = response.data
       initialized.value = true
       cartOpen.value = true
-      notify(`${product.name} foi adicionado à cesta.`)
+      notify(`${product.name} foi adicionado ao carrinho.`)
     } catch (error: any) {
       notify(error?.data?.message || 'Não foi possível adicionar o produto.', 'error')
     } finally {
@@ -114,7 +120,7 @@ export const useStorefrontCommerce = (storefront: StorefrontPayload) => {
         method: 'DELETE', headers: headers(),
       })
       cart.value = response.data
-      notify('Produto removido da cesta.')
+      notify('Produto removido do carrinho.')
     } catch (error: any) {
       notify(error?.data?.message || 'Não foi possível remover o produto.', 'error')
     } finally {
