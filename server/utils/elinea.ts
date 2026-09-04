@@ -23,7 +23,7 @@ export function createServerElineaClient(event: H3Event) {
     ...(hasStoreCredentials ? { storeKey, storeSecret } : { site: config.elineaStoreSite }),
     getAccessToken: () => authorization,
     getCartSession: () => cartSession,
-  })
+  }) as any
 }
 
 export function rethrowElineaError(error: unknown): never {

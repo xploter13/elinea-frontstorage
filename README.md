@@ -60,3 +60,6 @@ migração.
 
 Consulte `docs/context.md` e `docs/package-architecture.md` para os limites de cada
 camada.
+# elinea-storefront
+
+O storefront concentra a vitrine pública. As rotas `/conta/**`, `/login` e `/redefinir-senha`, além de `/carrinho` e `/checkout`, são encaminhadas pelo Nitro para o `elinea-customer` através de `NUXT_CUSTOMER_APP_URL`.

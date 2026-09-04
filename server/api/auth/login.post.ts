@@ -8,7 +8,11 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const session = await createServerElineaClient(event).customer.login({ email: body.email, password: body.password })
+    const session: any = await (createServerElineaClient(event) as any).customer.login({ email: body.email, password: body.password })
+    if ('twoFactorRequired' in session) {
+      setCookie(event, 'elinea_customer_2fa_token', session.twoFactorToken, { httpOnly: true, sameSite: 'lax', secure: !import.meta.dev, path: '/', maxAge: 300 })
+      return { two_factor_required: true, expires_at: session.expiresAt }
+    }
     setCookie(event, 'elinea_customer_token', session.token, {
       httpOnly: true,
       sameSite: 'lax',
